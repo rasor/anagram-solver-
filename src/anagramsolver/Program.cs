@@ -6,11 +6,13 @@ namespace anagramsolver
     {
         static void Main(string[] args)
         {
+            const string ANAGRAM = "poultry outwits ants";
+
             Console.WriteLine("Hello from AnagramSolver!");
 
             // Pseudo:
             // A. Decrease the dataset
-            A1_DecreaseTheDataset();
+            A1_DecreaseTheDataset(ANAGRAM);
 
             // B. Find valid words in dataset
             B1_FindValidWordsInDataset();
@@ -24,8 +26,9 @@ namespace anagramsolver
             Console.WriteLine("Done AnagramSolver!");
         }
 
-        static void A1_DecreaseTheDataset(){
-            // A1 Create a set of letters not in the anagram
+        static void A1_DecreaseTheDataset(string anagram){
+            // A1A Create a set of letters not in the anagram
+            
         }
         static void B1_FindValidWordsInDataset(){}
         static void C1_FindValidCombinationsWith2Words(){}
