@@ -49,12 +49,13 @@ namespace anagramsolver
             var longestWord = C2_OrderWordsInDatasetByLenght(anagramCtrl, wordlistCtrl);
             Console.WriteLine("");
 
-            // D. Find valid combinations with 2 words
-            ConsoleWriteLine("D1_FindValidCombinationsWith2Words()");
-            D1_FindValidCombinationsWith2Words(longestWord, anagramCtrl, wordlistCtrl);
-            Console.WriteLine("");
+            using (MD5 md5HashComputer = MD5.Create())
+            {
+                // D. Find valid combinations with 2 words
+                ConsoleWriteLine("D1_FindValidCombinationsWith2Words()");
+                D1_FindValidCombinationsWith2Words(md5HashComputer, longestWord, anagramCtrl, wordlistCtrl);
+                Console.WriteLine("");
 
-            using (MD5 md5HashComputer = MD5.Create()) {
                 // E. Test combinations towards md5
                 ConsoleWriteLine("E1_Test2WordCombinationsTowardsMd5()");
                 E1_Test2WordCombinationsTowardsMd5(md5HashComputer);
@@ -132,7 +133,7 @@ namespace anagramsolver
             return longestWord;
         }
 
-        static void D1_FindValidCombinationsWith2Words(int longestWord, AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl)
+        static void D1_FindValidCombinationsWith2Words(MD5 Md5HashComputer, int longestWord, AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl)
         {
             var numberOfLettersInAnagramWithoutSpace = AnagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
             var shortestWord = numberOfLettersInAnagramWithoutSpace - longestWord; // 18 - 11 = 7
@@ -155,7 +156,7 @@ namespace anagramsolver
             // ----- and return the found sentense ("A B")
 
             // D1B LoopSetsOf2Words
-            // WordlistCtrl.LoopSetsOf2WordsValidateAndCheckMd5(Console.Out, AnagramCtrl);
+            WordlistCtrl.LoopSetsOf2WordsDoValidateAndCheckMd5(ConsoleWriteLine, Md5HashComputer, AnagramCtrl);
         }
 
         static void E1_Test2WordCombinationsTowardsMd5(MD5 md5HashComputer) { }

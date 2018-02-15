@@ -1,8 +1,10 @@
 ﻿using anagramsolver.helpers;
+using anagramsolver.models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace anagramsolver.containers
 {
@@ -184,5 +186,36 @@ namespace anagramsolver.containers
             return listOfWordLenghts;
         }
 
+        internal void LoopSetsOf2WordsDoValidateAndCheckMd5(Action<string> ConsoleWriteLine, MD5 Md5HashComputer, AnagramContainer AnagramCtrl)
+        {
+            // Pseudo:
+            // Create permutationsets-loop-algoritm.
+            // In the loop do
+            // - Foreach set (of two words)
+            // -- If set 1000 has been reached print the set number and the set words
+            // -- Loop permuatations (AB and BA, when words are only two)
+            // --- Validate A+B against anagram
+            // --- If valid then check "A B" md5 against all 3 md5 solutions
+            // ---- If found then remove the md5 from the list, so there only will be two to check against
+            // ----- and return the found sentense ("A B")
+
+            var hlpr = new TableHelper();
+            UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
+            var tableToLoopThrough = _tableByWordLength;
+            var totalLetters = AnagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
+            var hasUnEvenChars = totalLetters % 2; //if even the then the middle words are both first and last word - so that row in the table needs special looping
+            var middleWordLetters = (totalLetters + hasUnEvenChars) / 2;
+
+            CurrentSetOfTwoPos currentSet =  new CurrentSetOfTwoPos(totalLetters);
+
+            ConsoleWriteLine("CombinationCounter: " + combinationCounter + ". CurrentSet: " + currentSet.ToString());
+
+            while (currentSet.SetNextSet())
+            {
+                ConsoleWriteLine("CombinationCounter: " + combinationCounter + ". CurrentSet: " + currentSet.ToString());
+                //
+            }
+            ConsoleWriteLine("CombinationCounter: " + combinationCounter + ". No more sets");
+        }
     }
 }
