@@ -129,16 +129,7 @@ namespace anagramsolver.containers
             var isSubset = true;
             foreach (var row in _tableFilter2_WordMatrix)
             {
-                isSubset = true;
-                // Word is stored from col3 onwards - loop it
-                for (int i = 3; i < row.Length-1; i++)
-                {
-                    // Too many letters in word - it is not a subset
-                    if (row[i] > anagramRow[i])
-                    {
-                        isSubset = false;
-                    }
-                }
+                isSubset = IsSubset(anagramRow, row);
                 // Update col2
                 if (isSubset)
                 {
@@ -147,6 +138,22 @@ namespace anagramsolver.containers
                 }
             }
             return noOfWordsBeingSubset;
+        }
+
+        private bool IsSubset(int[] anagramRow, int[] row)
+        {
+            bool isSubset = true;
+            // Word is stored from col3 onwards - loop it
+            for (int i = 3; i < row.Length - 1; i++)
+            {
+                // Too many letters in word - it is not a subset
+                if (row[i] > anagramRow[i])
+                {
+                    isSubset = false;
+                }
+            }
+
+            return isSubset;
         }
 
         internal List<int> CreateTableByWordLength(AnagramContainer AnagramCtrl)
@@ -201,6 +208,7 @@ namespace anagramsolver.containers
 
             var md5Hlpr = new Md5Helper(Md5HashComputer, AnagramCtrl.Md5Hashes);
             UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
+            UInt64 subsetCounter = 0; // count number of combinations that is also subset of anagram
             var tableToLoopThrough = _tableByWordLength;
             var totalLetters = AnagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
             var hasUnEvenChars = totalLetters % 2; //if even the then the middle words are both first and last word - so that row in the table needs special looping
@@ -209,36 +217,66 @@ namespace anagramsolver.containers
             // Set initial set - [1, 17]
             CurrentSetOfTwoPos currentSet = new CurrentSetOfTwoPos(totalLetters);
             // Loop initial set - [1, 17]
-            LoopCombinationsInCurrentSet(ConsoleWriteLine, currentSet, md5Hlpr, ref combinationCounter);
+            LoopCombinationsInCurrentSet(ConsoleWriteLine, currentSet, md5Hlpr, AnagramCtrl, ref combinationCounter, ref subsetCounter);
             // Continue with the rest of the sets - downto set [9, 9]
             while (currentSet.SetNextSet())
             {
-                LoopCombinationsInCurrentSet(ConsoleWriteLine, currentSet, md5Hlpr, ref combinationCounter);
+                LoopCombinationsInCurrentSet(ConsoleWriteLine, currentSet, md5Hlpr, AnagramCtrl, ref combinationCounter, ref subsetCounter);
             }
-            ConsoleWriteLine(" CombinationCounter: " + combinationCounter + ". No more sets");
+            ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter +  ". No more sets");
         }
 
-        private void LoopCombinationsInCurrentSet(Action<string> ConsoleWriteLine, CurrentSetOfTwoPos currentSetLength, Md5Helper md5Hlpr, ref ulong combinationCounter)
+        private void LoopCombinationsInCurrentSet(Action<string> ConsoleWriteLine, CurrentSetOfTwoPos currentSetLength, Md5Helper md5Hlpr, AnagramContainer AnagramCtrl, ref ulong combinationCounter, ref ulong subsetCounter)
         {
-            ConsoleWriteLine(" CombinationCounter: " + combinationCounter + ". CurrentSet: " + currentSetLength.ToString());
+            ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
 
             var listOfPointersToWordLong = _tableByWordLength[currentSetLength.Word2Length];
             var listOfPointersToWordShort = _tableByWordLength[currentSetLength.Word1Length];
+            var toValidateAgainstRow = AnagramCtrl.AnagramRow;
 
             // Since we know that there won't be any long words before len = 11, then we make the outer loop pass those 0 values first
             foreach (var wordLongPointer in listOfPointersToWordLong)
             {
                 foreach (var wordShortPointer in listOfPointersToWordShort)
                 {
-                    //ConsoleWriteLine(" CombinationCounter: " + combinationCounter);
-                    var currentWordSet = new SetOfTwoWords(wordShortPointer, wordLongPointer);
-                    //this.
-                    var reverseWordSet = new SetOfTwoWords(wordLongPointer, wordShortPointer);
+                    // ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter);
+                    //var currentWordSet = new SetOfTwoWords(wordShortPointer, wordLongPointer);
+
+                    var wordShortRow = this._tableFilter2_WordMatrix[wordShortPointer];
+                    var wordLongRow = this._tableFilter2_WordMatrix[wordLongPointer];
+                    var combinedWordToValidate = CombineRows(wordShortRow, wordLongRow);
+                    var isSubset = IsSubset(toValidateAgainstRow, combinedWordToValidate);
+
+                    // Do MD5 check if the two words combined is still a subset of anagram
+                    if (isSubset)
+                    {
+                        subsetCounter++;
+                        var wordShort = this._listFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordShortPointer);
+                        var wordLong = this._listFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordLongPointer);
+                    }
+
+                    //var reverseWordSet = new SetOfTwoWords(wordLongPointer, wordShortPointer);
 
                     combinationCounter++;
                 }
             }
 
+        }
+
+        private int[] CombineRows(int[] row1, int[] row2)
+        {
+            // Make a copy of row2
+            int[] combinedRow = (int[]) row2.Clone();
+
+            // Word is stored from col3 onwards - loop it.
+            // Col1 is number of chars
+            for (int i = 1; i < row1.Length - 1; i++)
+            {
+                // Add row1 to row2
+                combinedRow[i] += row1[i];
+            }
+
+            return combinedRow;
         }
     }
 }
