@@ -1,5 +1,8 @@
-using System;
 using Xunit;
+using anagramsolver.models;
+using anagramsolver.containers;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace anagramsolverTests
 {
@@ -8,9 +11,9 @@ namespace anagramsolverTests
         [Fact]
         public void Test1()
         {
-            string expected = "Woof!";
-            string actual = "Wroof!"; //new Dog().TalkToOwner();
-            Assert.NotEqual(expected, actual);
+            string expected = "poultry";
+            string actual = new StringBox("poultry abc").RawData;
+            Assert.Contains(expected, actual);
         }
     }
 }
