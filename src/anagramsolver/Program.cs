@@ -9,6 +9,12 @@ namespace anagramsolver
 {
     class Program
     {
+        // Input data
+        const string ANAGRAM = "poultry outwits ants";
+        const string WORDLISTPATH = @".\resources\wordlist.txt";
+        static readonly string[] md5Hashes = 
+            { "e4820b45d2277f3844eac66c903e84be", "23170acc097c24edb98fc5488ab033fe", "665e5bcb0c20062fe8abaaf4628bb154" };
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello from AnagramSolver!");
@@ -51,6 +57,7 @@ namespace anagramsolver
 
             using (MD5 md5HashComputer = MD5.Create())
             {
+
                 // D. Find valid combinations with 2 words
                 ConsoleWriteLine("D1_FindValidCombinationsWith2Words()");
                 D1_FindValidCombinationsWith2Words(md5HashComputer, longestWord, anagramCtrl, wordlistCtrl);
@@ -67,12 +74,10 @@ namespace anagramsolver
         }
 
         static AnagramContainer A1_LoadAnagram() {
-            // Input data
-            const string ANAGRAM = "poultry outwits ants";
             // Put data in a model, where it can be represented in various ways
             var anagram = new StringBox(ANAGRAM);
             // Put data in a controller that can manage it
-            var anagramCtrl = new AnagramContainer(anagram);
+            var anagramCtrl = new AnagramContainer(anagram, md5Hashes);
             ConsoleWriteLine(" This is the input anagram: '" + anagramCtrl.Anagram.RawData + "'");
             ConsoleWriteLine(" These distinct letters does the anagram contain: '" + anagramCtrl.Anagram.DistinctDataWithoutSpaceAsString + "'");
             ConsoleWriteLine(" As above, but sorted: '" + anagramCtrl.Anagram.DistinctDataWithoutSpaceSortedAsString + "' - also called TableHeader");
@@ -80,8 +85,6 @@ namespace anagramsolver
         }
 
         static WordlistContainer A2_LoadWordlist() {
-            // Input data
-            const string WORDLISTPATH = @".\resources\wordlist.txt";
             var wordlistCtrl = new WordlistContainer(WORDLISTPATH);
             ConsoleWriteLine(" The unfiltered input wordlist contains " + wordlistCtrl.ListUnfiltered0_Wordlist.Count + " lines");
             return wordlistCtrl;

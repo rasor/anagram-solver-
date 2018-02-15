@@ -9,17 +9,26 @@ namespace anagramsolver.helpers
     /// </summary>
     public class Md5Helper
     {
-        public bool VerifyMd5Hash(MD5 md5HashComputer, string input, string[] md5HashArrayToVerifyAgainst)
+        private MD5 _md5HashComputer;
+        private string[] _md5Hashes;
+
+        public Md5Helper(MD5 Md5HashComputer, string[] Md5Hashes)
+        {
+            _md5HashComputer = Md5HashComputer;
+            _md5Hashes = Md5Hashes;
+        }
+
+        public bool VerifyMd5Hash(string input)
         {
             // Hash the input.
-            string hashOfInput = GetMd5Hash(md5HashComputer, input);
+            string hashOfInput = GetMd5Hash(_md5HashComputer, input);
 
             // Create a StringComparer an compare the hashes.
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
             // Check aginst each md5 string 
             bool result = false;
-            foreach (var md5HashToVerifyAgainst in md5HashArrayToVerifyAgainst)
+            foreach (var md5HashToVerifyAgainst in _md5Hashes)
             {
                 result = (0 == comparer.Compare(hashOfInput, md5HashToVerifyAgainst));
                 if (true)

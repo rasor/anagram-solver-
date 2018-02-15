@@ -10,6 +10,10 @@ namespace anagramsolver.containers
     /// </summary>
     public class AnagramContainer
     {
+        // The 3 input hashes
+        private string[] _md5Hashes;
+        public string[] Md5Hashes { get { return _md5Hashes; } }
+
         // The input anagram
         private StringBox _anagram;
         public StringBox Anagram { get { return _anagram; } }
@@ -22,9 +26,10 @@ namespace anagramsolver.containers
         private int[] _anagramRow;
         public int[] AnagramRow { get { return _anagramRow; } }
 
-        public AnagramContainer(StringBox anagram)
+        public AnagramContainer(StringBox anagram, string[] md5Hashes)
         {
             _anagram = anagram;
+            _md5Hashes = md5Hashes;
         }
 
 

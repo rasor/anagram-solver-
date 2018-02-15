@@ -199,23 +199,46 @@ namespace anagramsolver.containers
             // ---- If found then remove the md5 from the list, so there only will be two to check against
             // ----- and return the found sentense ("A B")
 
-            var hlpr = new TableHelper();
+            var md5Hlpr = new Md5Helper(Md5HashComputer, AnagramCtrl.Md5Hashes);
             UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
             var tableToLoopThrough = _tableByWordLength;
             var totalLetters = AnagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
             var hasUnEvenChars = totalLetters % 2; //if even the then the middle words are both first and last word - so that row in the table needs special looping
             var middleWordLetters = (totalLetters + hasUnEvenChars) / 2;
 
-            CurrentSetOfTwoPos currentSet =  new CurrentSetOfTwoPos(totalLetters);
-
-            ConsoleWriteLine("CombinationCounter: " + combinationCounter + ". CurrentSet: " + currentSet.ToString());
-
+            // Set initial set - [1, 17]
+            CurrentSetOfTwoPos currentSet = new CurrentSetOfTwoPos(totalLetters);
+            // Loop initial set - [1, 17]
+            LoopCombinationsInCurrentSet(ConsoleWriteLine, currentSet, md5Hlpr, ref combinationCounter);
+            // Continue with the rest of the sets - downto set [9, 9]
             while (currentSet.SetNextSet())
             {
-                ConsoleWriteLine("CombinationCounter: " + combinationCounter + ". CurrentSet: " + currentSet.ToString());
-                //
+                LoopCombinationsInCurrentSet(ConsoleWriteLine, currentSet, md5Hlpr, ref combinationCounter);
             }
-            ConsoleWriteLine("CombinationCounter: " + combinationCounter + ". No more sets");
+            ConsoleWriteLine(" CombinationCounter: " + combinationCounter + ". No more sets");
+        }
+
+        private void LoopCombinationsInCurrentSet(Action<string> ConsoleWriteLine, CurrentSetOfTwoPos currentSetLength, Md5Helper md5Hlpr, ref ulong combinationCounter)
+        {
+            ConsoleWriteLine(" CombinationCounter: " + combinationCounter + ". CurrentSet: " + currentSetLength.ToString());
+
+            var listOfPointersToWordLong = _tableByWordLength[currentSetLength.Word2Length];
+            var listOfPointersToWordShort = _tableByWordLength[currentSetLength.Word1Length];
+
+            // Since we know that there won't be any long words before len = 11, then we make the outer loop pass those 0 values first
+            foreach (var wordLongPointer in listOfPointersToWordLong)
+            {
+                foreach (var wordShortPointer in listOfPointersToWordShort)
+                {
+                    //ConsoleWriteLine(" CombinationCounter: " + combinationCounter);
+                    var currentWordSet = new SetOfTwoWords(wordShortPointer, wordLongPointer);
+                    //this.
+                    var reverseWordSet = new SetOfTwoWords(wordLongPointer, wordShortPointer);
+
+                    combinationCounter++;
+                }
+            }
+
         }
     }
 }
