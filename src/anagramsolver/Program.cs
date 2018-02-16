@@ -155,8 +155,8 @@ namespace anagramsolver
 
             // D1B LoopSetsOf2Words
             var looper = new LoopSetsOf2WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
-            looper.LoopSetsOf2WordsDoValidateAndCheckMd5();
-            looper.LoopSetsOf3WordsDoValidateAndCheckMd5();
+            int numberOfJackpots = looper.LoopSetsOf2WordsDoValidateAndCheckMd5();
+            numberOfJackpots = looper.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots);
         }
 
         static void ConsoleWriteLine(string stringToLog) {

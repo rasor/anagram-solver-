@@ -41,8 +41,9 @@ namespace anagramsolver.helpers
         /// ---- If found then remove the md5 from the list, so there only will be two to check against
         /// ----- and return the found sentense ("A B")
         /// </summary>
-        internal void LoopSetsOf2WordsDoValidateAndCheckMd5()
+        internal int LoopSetsOf2WordsDoValidateAndCheckMd5()
         {
+            int numberOfJackpots = 0;
             UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
             UInt64 subsetCounter = 0; // count number of combinations that is also subset of anagram
             var tableToLoopThrough = _wordlistCtrl.TableByWordLength;
@@ -53,17 +54,20 @@ namespace anagramsolver.helpers
             // Set initial set - [1, 17]
             CurrentSetOfTwoPos currentSet = new CurrentSetOfTwoPos(totalLetters);
             // Loop initial set - [1, 17]
-            Loop2WordCombinationsInCurrentSet(currentSet, ref combinationCounter, ref subsetCounter);
+            numberOfJackpots += Loop2WordCombinationsInCurrentSet(currentSet, ref combinationCounter, ref subsetCounter);
             // Continue with the rest of the sets - downto set [9, 9]
             while (currentSet.SetNextSet())
             {
-                Loop2WordCombinationsInCurrentSet(currentSet, ref combinationCounter, ref subsetCounter);
+                numberOfJackpots += Loop2WordCombinationsInCurrentSet(currentSet, ref combinationCounter, ref subsetCounter);
             }
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". No more sets");
+
+            return numberOfJackpots;
         }
 
-        private void Loop2WordCombinationsInCurrentSet(CurrentSetOfTwoPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
+        private int Loop2WordCombinationsInCurrentSet(CurrentSetOfTwoPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
+            int numberOfJackpots = 0;
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
 
             var listOfPointersToWordLong =  _tableByWordLength[currentSetLength.Word2Length];
@@ -90,25 +94,34 @@ namespace anagramsolver.helpers
                         var wordLong = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordLongPointer);
 
                         // did we get lucky?
-                        gotJackpot = _md5Hlpr.VerifyMd5Hash(wordShort + " " + wordLong);
-
+                        gotJackpot = checkMd5(ref numberOfJackpots, wordShort + " " + wordLong);
 
                         if (!gotJackpot)
                         {
                             // did we get lucky with reverse set?
-                            gotJackpot = _md5Hlpr.VerifyMd5Hash(wordLong + " " + wordShort);
+                            gotJackpot = checkMd5(ref numberOfJackpots, wordLong + " " + wordShort);
                         }
                     }
 
                     combinationCounter++;
                 }
             }
-
+            return numberOfJackpots;
         }
 
-        internal void LoopSetsOf3WordsDoValidateAndCheckMd5()
+        private bool checkMd5(ref int numberOfJackpots, string sentenceToCheck)
         {
-            //throw new NotImplementedException();
+            bool gotJackpot = _md5Hlpr.VerifyMd5Hash(sentenceToCheck);
+            if (gotJackpot) {
+                numberOfJackpots++;
+                _consoleWriteLine(" JACKPOT number "+ numberOfJackpots + " with '" + sentenceToCheck + "'");
+            }
+            return gotJackpot;
+        }
+
+        internal int LoopSetsOf3WordsDoValidateAndCheckMd5(int numberOfJackpots)
+        {
+            return numberOfJackpots;
         }
 
         /// <summary>
