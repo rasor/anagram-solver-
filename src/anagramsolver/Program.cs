@@ -131,19 +131,17 @@ namespace anagramsolver
             return longestWord;
         }
 
+        /// <summary>
+        /// Loop through combinations
+        /// https://www.mathsisfun.com/combinatorics/combinations-permutations.html
+        /// </summary>
+        /// <param name="Md5HashComputer"></param>
+        /// <param name="longestWord"></param>
+        /// <param name="AnagramCtrl"></param>
+        /// <param name="WordlistCtrl"></param>
         static void D1_FindValidCombinations(MD5 Md5HashComputer, int longestWord, AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl)
         {
-            var numberOfLettersInAnagramWithoutSpace = AnagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
-            var shortestWord = numberOfLettersInAnagramWithoutSpace - longestWord; // 18 - 11 = 7
-
-            // Since length of AnagramWithoutSpaces is 18 and longest word is 11 then:
-            // Combinations of two words can be with lengths: 11 + 7, 10 + 8, 9 + 9 - and order matters
-            // https://www.mathsisfun.com/combinatorics/combinations-permutations.html
-
-            // D1A Create a list of permutationsets with 2 words
-
-            // New idea - intead of creating a list-of-permutationsets (wich in itself can tak a long time) 
-            // then just create permutationsets-loop-algoritm.
+            // Create permutationsets-loop-algoritm.
             // In the loop do
             // - Foreach set (of two words)
             // -- If set 1000 has been reached print the set number and the set words
@@ -153,10 +151,13 @@ namespace anagramsolver
             // ---- If found then remove the md5 from the list, so there only will be two to check against
             // ----- and return the found sentense ("A B")
 
-            // D1B LoopSetsOf2Words
-            var looper = new LoopSetsOf2WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
-            int numberOfJackpots = looper.LoopSetsOf2WordsDoValidateAndCheckMd5();
-            numberOfJackpots = looper.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots);
+            // D1A LoopSetsOf2Words
+            var looper2 = new LoopSetsOf2WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
+            int numberOfJackpots = looper2.LoopSetsOf2WordsDoValidateAndCheckMd5();
+
+            // D1B LoopSetsOf3Words
+            var looper3 = new LoopSetsOf3WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
+            numberOfJackpots = looper3.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots);
         }
 
         static void ConsoleWriteLine(string stringToLog) {

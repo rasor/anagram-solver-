@@ -8,26 +8,12 @@ using System.Text;
 
 namespace anagramsolver.helpers
 {
-    public class LoopSetsOf2WordsHelper
+    public class LoopSetsOf2WordsHelper: LoopSetsBase
     {
-        private Action<string> _consoleWriteLine;
-        private MD5 _md5HashComputer;
-        private Md5Helper _md5Hlpr;
-
-        private AnagramContainer _anagramCtrl;
-        private WordlistContainer _wordlistCtrl;
-        public List<List<int>> _tableByWordLength;
-
-        public LoopSetsOf2WordsHelper(Action<string> ConsoleWriteLine, MD5 Md5HashComputer, 
-            AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl)
-        {
-            _consoleWriteLine = ConsoleWriteLine;
-            _md5HashComputer = Md5HashComputer;
-            _anagramCtrl = AnagramCtrl;
-            _wordlistCtrl = WordlistCtrl;
-            _tableByWordLength = _wordlistCtrl.TableByWordLength;
-            _md5Hlpr = new Md5Helper(_md5HashComputer, _anagramCtrl.Md5Hashes);
-        }
+        public LoopSetsOf2WordsHelper(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
+            AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl) : 
+            base(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
+        { }
 
         /// <summary>
         /// Pseudo:
@@ -41,7 +27,7 @@ namespace anagramsolver.helpers
         /// ---- If found then remove the md5 from the list, so there only will be two to check against
         /// ----- and return the found sentense ("A B")
         /// </summary>
-        internal int LoopSetsOf2WordsDoValidateAndCheckMd5()
+        public int LoopSetsOf2WordsDoValidateAndCheckMd5()
         {
             int numberOfJackpots = 0;
             UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
@@ -106,21 +92,6 @@ namespace anagramsolver.helpers
                     combinationCounter++;
                 }
             }
-            return numberOfJackpots;
-        }
-
-        private bool checkMd5(ref int numberOfJackpots, string sentenceToCheck)
-        {
-            bool gotJackpot = _md5Hlpr.VerifyMd5Hash(sentenceToCheck);
-            if (gotJackpot) {
-                numberOfJackpots++;
-                _consoleWriteLine(" JACKPOT number "+ numberOfJackpots + " with '" + sentenceToCheck + "'");
-            }
-            return gotJackpot;
-        }
-
-        internal int LoopSetsOf3WordsDoValidateAndCheckMd5(int numberOfJackpots)
-        {
             return numberOfJackpots;
         }
 
