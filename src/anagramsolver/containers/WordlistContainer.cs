@@ -34,6 +34,10 @@ namespace anagramsolver.containers
             _listUnfiltered0_Wordlist = wordArray.ToList();
         }
 
+        /// <summary>
+        /// Load wordlist together with wordlength, remove duplicates 
+        /// </summary>
+        /// <param name="anagramCtrl"></param>
         internal void Filter1_CreateListOfWordsHavingLettersFromAnagram(AnagramContainer anagramCtrl)
         {
             // preapare lists
@@ -58,34 +62,36 @@ namespace anagramsolver.containers
             });
         }
 
+        /// <summary>
+        /// What's the plan? 
+        /// Create a table (of integers) having words as rows, where 
+        /// - col0 is index to ListFilter1
+        /// - col1 is length of word
+        /// - col2 is a bit telling if the word is a subset of the anagram (0 = Invalid, 1 = IsSubset)
+        /// - col3 to approx col15 is count of each letter in the word
+        /// Each row has same line number as in Filter1 to be able to easy lookup the word. The line number is also stored in col0.
+        /// Only letters from the anagram is stored, since other letters were removed before ListFilter1
+        /// Sample of table:
+        /// Word in ListFilter1     TableFilter2
+        ///                         "ailnoprstuwy" <- The letters in anagram - sorted - this is header line (not in table)
+        /// "poultryoutwitsants"     111121124211  <- The anagram (not in table)
+        /// -------------------------------------- (below this line is in table)
+        /// "airstrip"            080120001211000  <- Line0, Len: 8, Invalid, no of each char
+        /// "tyranosaurus"        1c0200110221201  <- Line1, Len: c, Invalid, no of each char
+        ///
+        /// After creating this table we 
+        /// - calculate which rows are valid
+        /// - perhaps remove invalid rows
+        /// - calculate some combinations from the length of the words
+        /// Foreach combination sum the cols in the table - as soon as we reach a col with number differs from anagram then check failed and we goto next combination
+        ///
+        /// If all match then it is time for md5 checksum match - if fail, then try out each different order of words
+        /// 
+        /// It is important that this table is very fast to access, so we use a simple array with fixed size
+        /// </summary>
+        /// <param name="anagramCtrl"></param>
         internal void Filter2_CreateTableOfWordsBeingSubsetOfAnagram(AnagramContainer anagramCtrl)
         {
-            // What's the plan? ------------------------------------------------------
-            // Create a table (of integers) having words as rows, where 
-            // - col0 is index to ListFilter1
-            // - col1 is length of word
-            // - col2 is a bit telling if the word is a subset of the anagram (0 = Invalid, 1 = IsSubset)
-            // - col3 to approx col15 is count of each letter in the word
-            // Each row has same line number as in Filter1 to be able to easy lookup the word. The line number is also stored in col0.
-            // Only letters from the anagram is stored, since other letters were removed before ListFilter1
-            // Sample of table:
-            // Word in ListFilter1     TableFilter2
-            //                         "ailnoprstuwy" <- The letters in anagram - sorted - this is header line (not in table)
-            // "poultryoutwitsants"     111121124211  <- The anagram (not in table)
-            // -------------------------------------- (below this line is in table)
-            // "airstrip"            080120001211000  <- Line0, Len: 8, Invalid, no of each char
-            // "tyranosaurus"        1c0200110221201  <- Line1, Len: c, Invalid, no of each char
-
-            // After creating this table we 
-            // - calculate which rows are valid
-            // - perhaps remove invalid rows
-            // - calculate some combinations from the length of the words
-            // Foreach combination sum the cols in the table - as soon as we reach a col with number differs from anagram then check failed and we goto next combination
-
-            // If all match then it is time for md5 checksum match - if fail, then try out each different order of words
-
-            // Back to work ------------------------------------------------------
-
             var hlpr = new TableHelper();
             // The "table header" - ailnoprstuwy
             var tableHeaderOfAnagramSorted = anagramCtrl.Anagram.DistinctDataWithoutSpaceSorted;
@@ -113,23 +119,25 @@ namespace anagramsolver.containers
             }
         }
 
+        /// <summary>
+        /// Pseudo:
+        /// Loop through rows
+        ///   Loop through number of letters in each row
+        ///     If there are more letters than in anagram, then bail out
+        ///   If not bailed out, then word is subset, so update col2
+        /// </summary>
+        /// <param name="anagramCtrl"></param>
+        /// <returns></returns>
         internal int UpdateCol2InTableFilter2(AnagramContainer anagramCtrl)
         {
-            // Pseudo:
-            // Loop through rows
-            //   Loop through number of letters in each row
-            //     If there are more letters than in anagram, then bail out
-            //   If not bailed out, then word is subset, so update col2
-
             // No number of letters must be larger than in the anagram row
-            var anagramRow = anagramCtrl.AnagramRow;
             // Count number of words being subset
             var noOfWordsBeingSubset = 0;
 
             var isSubset = true;
             foreach (var row in _tableFilter2_WordMatrix)
             {
-                isSubset = IsSubset(anagramRow, row);
+                isSubset = anagramCtrl.IsSubset(row);
                 // Update col2
                 if (isSubset)
                 {
@@ -140,22 +148,11 @@ namespace anagramsolver.containers
             return noOfWordsBeingSubset;
         }
 
-        private bool IsSubset(int[] anagramRow, int[] row)
-        {
-            bool isSubset = true;
-            // Word is stored from col3 onwards - loop it
-            for (int i = 3; i < row.Length - 1; i++)
-            {
-                // Too many letters in word - it is not a subset
-                if (row[i] > anagramRow[i])
-                {
-                    isSubset = false;
-                }
-            }
-
-            return isSubset;
-        }
-
+        /// <summary>
+        /// Populate TableByWordLength from words in TableFilter2_WordMatrix.
+        /// </summary>
+        /// <param name="AnagramCtrl"></param>
+        /// <returns></returns>
         internal List<int> CreateTableByWordLength(AnagramContainer AnagramCtrl)
         {
             var anagramLenghtWithoutSpaces = AnagramCtrl.Anagram.RawDataWithoutSpace.Length;
@@ -191,92 +188,6 @@ namespace anagramsolver.containers
                 _tableByWordLength.Add(row);
             }
             return listOfWordLenghts;
-        }
-
-        internal void LoopSetsOf2WordsDoValidateAndCheckMd5(Action<string> ConsoleWriteLine, MD5 Md5HashComputer, AnagramContainer AnagramCtrl)
-        {
-            // Pseudo:
-            // Create permutationsets-loop-algoritm.
-            // In the loop do
-            // - Foreach set (of two words)
-            // -- If set 1000 has been reached print the set number and the set words
-            // -- Loop permuatations (AB and BA, when words are only two)
-            // --- Validate A+B against anagram
-            // --- If valid then check "A B" md5 against all 3 md5 solutions
-            // ---- If found then remove the md5 from the list, so there only will be two to check against
-            // ----- and return the found sentense ("A B")
-
-            var md5Hlpr = new Md5Helper(Md5HashComputer, AnagramCtrl.Md5Hashes);
-            UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
-            UInt64 subsetCounter = 0; // count number of combinations that is also subset of anagram
-            var tableToLoopThrough = _tableByWordLength;
-            var totalLetters = AnagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
-            var hasUnEvenChars = totalLetters % 2; //if even the then the middle words are both first and last word - so that row in the table needs special looping
-            var middleWordLetters = (totalLetters + hasUnEvenChars) / 2;
-
-            // Set initial set - [1, 17]
-            CurrentSetOfTwoPos currentSet = new CurrentSetOfTwoPos(totalLetters);
-            // Loop initial set - [1, 17]
-            LoopCombinationsInCurrentSet(ConsoleWriteLine, currentSet, md5Hlpr, AnagramCtrl, ref combinationCounter, ref subsetCounter);
-            // Continue with the rest of the sets - downto set [9, 9]
-            while (currentSet.SetNextSet())
-            {
-                LoopCombinationsInCurrentSet(ConsoleWriteLine, currentSet, md5Hlpr, AnagramCtrl, ref combinationCounter, ref subsetCounter);
-            }
-            ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter +  ". No more sets");
-        }
-
-        private void LoopCombinationsInCurrentSet(Action<string> ConsoleWriteLine, CurrentSetOfTwoPos currentSetLength, Md5Helper md5Hlpr, AnagramContainer AnagramCtrl, ref ulong combinationCounter, ref ulong subsetCounter)
-        {
-            ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
-
-            var listOfPointersToWordLong = _tableByWordLength[currentSetLength.Word2Length];
-            var listOfPointersToWordShort = _tableByWordLength[currentSetLength.Word1Length];
-            var toValidateAgainstRow = AnagramCtrl.AnagramRow;
-
-            // Since we know that there won't be any long words before len = 11, then we make the outer loop pass those 0 values first
-            foreach (var wordLongPointer in listOfPointersToWordLong)
-            {
-                foreach (var wordShortPointer in listOfPointersToWordShort)
-                {
-                    // ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter);
-                    //var currentWordSet = new SetOfTwoWords(wordShortPointer, wordLongPointer);
-
-                    var wordShortRow = this._tableFilter2_WordMatrix[wordShortPointer];
-                    var wordLongRow = this._tableFilter2_WordMatrix[wordLongPointer];
-                    var combinedWordToValidate = CombineRows(wordShortRow, wordLongRow);
-                    var isSubset = IsSubset(toValidateAgainstRow, combinedWordToValidate);
-
-                    // Do MD5 check if the two words combined is still a subset of anagram
-                    if (isSubset)
-                    {
-                        subsetCounter++;
-                        var wordShort = this._listFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordShortPointer);
-                        var wordLong = this._listFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordLongPointer);
-                    }
-
-                    //var reverseWordSet = new SetOfTwoWords(wordLongPointer, wordShortPointer);
-
-                    combinationCounter++;
-                }
-            }
-
-        }
-
-        private int[] CombineRows(int[] row1, int[] row2)
-        {
-            // Make a copy of row2
-            int[] combinedRow = (int[]) row2.Clone();
-
-            // Word is stored from col3 onwards - loop it.
-            // Col1 is number of chars
-            for (int i = 1; i < row1.Length - 1; i++)
-            {
-                // Add row1 to row2
-                combinedRow[i] += row1[i];
-            }
-
-            return combinedRow;
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace anagramsolver.containers
+namespace anagramsolver.models
 {
     /// <summary>
     /// Contains length of two words, which combined is length of anagram

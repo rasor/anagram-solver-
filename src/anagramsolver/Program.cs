@@ -59,13 +59,8 @@ namespace anagramsolver
             {
 
                 // D. Find valid combinations with 2 words
-                ConsoleWriteLine("D1_FindValidCombinationsWith2Words()");
-                D1_FindValidCombinationsWith2Words(md5HashComputer, longestWord, anagramCtrl, wordlistCtrl);
-                Console.WriteLine("");
-
-                // E. Test combinations towards md5
-                ConsoleWriteLine("E1_Test2WordCombinationsTowardsMd5()");
-                E1_Test2WordCombinationsTowardsMd5(md5HashComputer);
+                ConsoleWriteLine("D1_FindValidCombinations()");
+                D1_FindValidCombinations(md5HashComputer, longestWord, anagramCtrl, wordlistCtrl);
                 Console.WriteLine("");
             }
 
@@ -136,7 +131,7 @@ namespace anagramsolver
             return longestWord;
         }
 
-        static void D1_FindValidCombinationsWith2Words(MD5 Md5HashComputer, int longestWord, AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl)
+        static void D1_FindValidCombinations(MD5 Md5HashComputer, int longestWord, AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl)
         {
             var numberOfLettersInAnagramWithoutSpace = AnagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
             var shortestWord = numberOfLettersInAnagramWithoutSpace - longestWord; // 18 - 11 = 7
@@ -159,10 +154,10 @@ namespace anagramsolver
             // ----- and return the found sentense ("A B")
 
             // D1B LoopSetsOf2Words
-            WordlistCtrl.LoopSetsOf2WordsDoValidateAndCheckMd5(ConsoleWriteLine, Md5HashComputer, AnagramCtrl);
+            var looper = new LoopSetsOf2WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
+            looper.LoopSetsOf2WordsDoValidateAndCheckMd5();
+            looper.LoopSetsOf3WordsDoValidateAndCheckMd5();
         }
-
-        static void E1_Test2WordCombinationsTowardsMd5(MD5 md5HashComputer) { }
 
         static void ConsoleWriteLine(string stringToLog) {
             Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + " "+ stringToLog);

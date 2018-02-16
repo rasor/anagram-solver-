@@ -71,5 +71,22 @@ namespace anagramsolver.containers
             var word = _anagram.RawDataWithoutSpace;
             _anagramRow = hlpr.FillRowFromWord(tableHeaderOfAnagramSorted, col0, col1, col2, word);
         }
+
+        internal bool IsSubset(int[] row)
+        {
+            bool isSubset = true;
+            // Word is stored from col3 onwards - loop it
+            for (int i = 3; i < row.Length - 1; i++)
+            {
+                // Too many letters in word - it is not a subset
+                if (row[i] > _anagramRow[i])
+                {
+                    isSubset = false;
+                }
+            }
+
+            return isSubset;
+        }
+
     }
 }

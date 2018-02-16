@@ -1,6 +1,6 @@
 using Xunit;
 using anagramsolver.models;
-using anagramsolver.containers;
+using anagramsolver.models;
 using System.Collections.Generic;
 using System.Linq;
 
