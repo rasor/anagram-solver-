@@ -1,10 +1,8 @@
 ﻿using anagramsolver.containers;
 using anagramsolver.models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace anagramsolver.helpers
 {
@@ -32,12 +30,14 @@ namespace anagramsolver.helpers
             int numberOfJackpots = 0;
             UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
             UInt64 subsetCounter = 0; // count number of combinations that is also subset of anagram
+            // The program finds Combinations: 1623 having Subsets: 0 from the wordlist
+
             var tableToLoopThrough = _wordlistCtrl.TableByWordLength;
             var totalLetters = _anagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
             var hasUnEvenChars = totalLetters % 2; //if even the then the middle words are both first and last word - so that row in the table needs special looping
             var middleWordLetters = (totalLetters + hasUnEvenChars) / 2;
 
-            // Set initial set - [1, 17]
+            // Set initial set - [1, 17] - a total of 18 chars
             CurrentSetOfTwoPos currentSet = new CurrentSetOfTwoPos(totalLetters);
             // Loop initial set - [1, 17]
             numberOfJackpots += Loop2WordCombinationsInCurrentSet(currentSet, ref combinationCounter, ref subsetCounter);

@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace anagramsolver.helpers
 {
-    public class LoopSetsBase
+    public abstract class LoopSetsBase
     {
         protected Action<string> _consoleWriteLine;
         protected MD5 _md5HashComputer;

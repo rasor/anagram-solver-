@@ -9,20 +9,20 @@ namespace anagramsolver.models
     /// </summary>
     public class CurrentSetOfTwoPos
     {
-        private int _word1Length, _word2Length;
+        protected int _word1Length, _word2Length;
         public int Word1Length { get { return _word1Length - 1; } } //subtract 1 to match index in table
         public int Word2Length { get { return _word2Length - 1; } } //subtract 1 to match index in table
 
-        private int _anagramLength;
-        private int _hasUnEvenChars; //if even the then the middle words are both first and last word - so that row in the table needs special looping
-        private bool _isEven;
-        private int _lowestMiddleWordLetters;
+        protected int _anagramLength;
+        protected int _hasUnEvenChars; //if even the then the middle words are both first and last word - so that row in the table needs special looping
+        protected bool _isEven;
+        protected int _lowestMiddleWordLetters;
 
-        public CurrentSetOfTwoPos(int AnagramLenght)
+        public CurrentSetOfTwoPos(int AnagramLength)
         {
             _word1Length = 1;
-            _word2Length = AnagramLenght -1;
-            _anagramLength = AnagramLenght;
+            _word2Length = AnagramLength -1;
+            _anagramLength = AnagramLength;
             _hasUnEvenChars = _anagramLength % 2;
             _isEven = (_hasUnEvenChars == 0);
             _lowestMiddleWordLetters = (_anagramLength - _hasUnEvenChars) / 2;
@@ -33,12 +33,13 @@ namespace anagramsolver.models
             return result;
         }
 
-        public bool SetNextSet() {
+        public virtual bool SetNextSet() {
             bool nextSetWasSet = true;
             if (_word1Length == _lowestMiddleWordLetters)
             {
                 nextSetWasSet = false;
             }
+            // sum of both wordlenghts reamins 18
             _word1Length++;
             _word2Length--;
             return nextSetWasSet;
