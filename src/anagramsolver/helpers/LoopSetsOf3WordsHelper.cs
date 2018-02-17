@@ -73,21 +73,36 @@ namespace anagramsolver.helpers
                             var word2 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word2Pointer);
                             var word3 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word3Pointer);
 
-                            // did we get lucky?
-                            gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word2 + " " + word3);
-
-                            //if (!gotJackpot)
-                            //{
-                            //    // did we get lucky with reverse set?
-                            //    gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word2);
-                            //}
+                            gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, word1, word2, word3);
                         }
-
                         combinationCounter++;
                     }
                 }
             }
             return numberOfJackpots;
+        }
+
+        /// <summary>
+        /// When this method is called we know that the characters in the sentence match (isSubset of) anagram
+        /// In here we loop through the order of the words and check md5
+        /// </summary>
+        /// <param name="numberOfJackpots"></param>
+        /// <param name="word1"></param>
+        /// <param name="word2"></param>
+        /// <param name="word3"></param>
+        /// <returns></returns>
+        private bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string word1, string word2, string word3)
+        {
+            bool gotJackpot = false;
+            // did we get lucky?
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word2 + " " + word3); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word3 + " " + word2); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word1 + " " + word3); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word3 + " " + word1); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word1 + " " + word2); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word2 + " " + word1); }
+
+            return gotJackpot;
         }
 
         /// <summary>
