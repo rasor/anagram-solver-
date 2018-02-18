@@ -11,7 +11,7 @@ namespace anagramsolver
     {
         // Input data
         const string ANAGRAM = "poultry outwits ants";
-        const string WORDLISTPATH = @".\resources\smallwordlist.txt";
+        const string WORDLISTPATH = @".\resources\wordlist.txt";
         static readonly string[] md5Hashes = 
             { "e4820b45d2277f3844eac66c903e84be", "23170acc097c24edb98fc5488ab033fe", "665e5bcb0c20062fe8abaaf4628bb154" };
 
@@ -154,12 +154,12 @@ namespace anagramsolver
             int numberOfJackpots = 0;
             // D1A LoopSetsOf2Words
             var looper2 = new LoopSetsOf2WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
-            //int numberOfJackpots = looper2.LoopSetsOf2WordsDoValidateAndCheckMd5();
+            numberOfJackpots = looper2.LoopSetsOf2WordsDoValidateAndCheckMd5();
             Console.WriteLine("");
 
             // D1B LoopSetsOf3Words
             var looper3 = new LoopSetsOf3WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
-            //numberOfJackpots = looper3.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots);
+            numberOfJackpots = looper3.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots);
 
             // D1C LoopSetsOf4Words
             var looper4 = new LoopSetsOf4WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);

@@ -27,13 +27,13 @@ namespace anagramsolver.helpers
             // Set initial set - [1, 1, 1, 15] - a total of 18 chars
             CurrentSetOf4Pos currentSetLength = new CurrentSetOf4Pos(totalLetters);
             // Loop initial set - [1, 1, 1, 15]
-            //numberOfJackpots += Loop4WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
-            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
+            numberOfJackpots += Loop4WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
+            //_consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
             // Continue with the rest of the sets - downto set [9, 9]
             while (currentSetLength.SetNextSet())
             {
-                //numberOfJackpots += Loop4WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
-                _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
+                numberOfJackpots += Loop4WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
+                //_consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
             }
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". No more sets");
 
@@ -45,37 +45,43 @@ namespace anagramsolver.helpers
             int numberOfJackpots = 0;
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
 
+            var listOfPointersToWord4 = _tableByWordLength[currentSetLength.Word4Length];
             var listOfPointersToWord3 = _tableByWordLength[currentSetLength.Word3Length];
             var listOfPointersToWord2 = _tableByWordLength[currentSetLength.Word2Length];
             var listOfPointersToWord1 = _tableByWordLength[currentSetLength.Word1Length];
 
             // Since we know that there won't be any long words before len = 11, then we make the outer loop pass those 0 values first
-            foreach (var word3Pointer in listOfPointersToWord3)
+            foreach (var word4Pointer in listOfPointersToWord4)
             {
-                foreach (var word2Pointer in listOfPointersToWord2)
+                foreach (var word3Pointer in listOfPointersToWord3)
                 {
-                    foreach (var word1Pointer in listOfPointersToWord1)
+                    foreach (var word2Pointer in listOfPointersToWord2)
                     {
-                        // ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter);
-
-                        var word1Row = _wordlistCtrl.TableFilter2_WordMatrix[word1Pointer];
-                        var word2Row = _wordlistCtrl.TableFilter2_WordMatrix[word2Pointer];
-                        var word3Row = _wordlistCtrl.TableFilter2_WordMatrix[word3Pointer];
-                        var combinedWordToValidate = CombineRows(word1Row, word2Row, word3Row);
-                        var isSubset = _anagramCtrl.IsSubset(combinedWordToValidate);
-
-                        // Do MD5 check if the two words combined is still a subset of anagram
-                        bool gotJackpot = false;
-                        if (isSubset)
+                        foreach (var word1Pointer in listOfPointersToWord1)
                         {
-                            subsetCounter++;
-                            var word1 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word1Pointer);
-                            var word2 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word2Pointer);
-                            var word3 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word3Pointer);
+                            // ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter);
 
-                            gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, word1, word2, word3);
+                            var word1Row = _wordlistCtrl.TableFilter2_WordMatrix[word1Pointer];
+                            var word2Row = _wordlistCtrl.TableFilter2_WordMatrix[word2Pointer];
+                            var word3Row = _wordlistCtrl.TableFilter2_WordMatrix[word3Pointer];
+                            var word4Row = _wordlistCtrl.TableFilter2_WordMatrix[word4Pointer];
+                            var combinedWordToValidate = CombineRows(word1Row, word2Row, word3Row, word4Row);
+                            var isSubset = _anagramCtrl.IsSubset(combinedWordToValidate);
+
+                            // Do MD5 check if the two words combined is still a subset of anagram
+                            bool gotJackpot = false;
+                            if (isSubset)
+                            {
+                                subsetCounter++;
+                                var word1 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word1Pointer);
+                                var word2 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word2Pointer);
+                                var word3 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word3Pointer);
+                                var word4 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word4Pointer);
+
+                                gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, word1, word2, word3, word4);
+                            }
+                            combinationCounter++;
                         }
-                        combinationCounter++;
                     }
                 }
             }
@@ -91,16 +97,37 @@ namespace anagramsolver.helpers
         /// <param name="word2"></param>
         /// <param name="word3"></param>
         /// <returns></returns>
-        private bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string word1, string word2, string word3)
+        private bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string word1, string word2, string word3, string word4)
         {
             bool gotJackpot = false;
             // did we get lucky?
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word2 + " " + word3); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word3 + " " + word2); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word1 + " " + word3); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word3 + " " + word1); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word1 + " " + word2); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word2 + " " + word1); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word2 + " " + word3 + " " + word4); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word2 + " " + word4 + " " + word3); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word3 + " " + word2 + " " + word4); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word3 + " " + word4 + " " + word2); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word4 + " " + word2 + " " + word3); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word4 + " " + word3 + " " + word2); }
+
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word1 + " " + word3 + " " + word4); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word1 + " " + word4 + " " + word3); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word3 + " " + word1 + " " + word4); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word3 + " " + word4 + " " + word1); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word4 + " " + word1 + " " + word3); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word4 + " " + word3 + " " + word1); }
+
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word1 + " " + word2 + " " + word4); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word1 + " " + word4 + " " + word2); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word2 + " " + word1 + " " + word4); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word2 + " " + word4 + " " + word1); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word4 + " " + word1 + " " + word2); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word4 + " " + word2 + " " + word1); }
+
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word1 + " " + word2 + " " + word3); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word1 + " " + word3 + " " + word2); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word2 + " " + word1 + " " + word3); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word2 + " " + word3 + " " + word1); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word3 + " " + word1 + " " + word2); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word3 + " " + word2 + " " + word1); }
 
             return gotJackpot;
         }
@@ -112,18 +139,19 @@ namespace anagramsolver.helpers
         /// <param name="row1">number of each letter in word1</param>
         /// <param name="row2">number of each letter in word2</param>
         /// <param name="row3">number of each letter in word3</param>
+        /// <param name="row4">number of each letter in word4</param>
         /// <returns>number of each letter in both words</returns>
-        private int[] CombineRows(int[] row1, int[] row2, int[] row3)
+        private int[] CombineRows(int[] row1, int[] row2, int[] row3, int[] row4)
         {
             // Make a copy of row3
-            int[] combinedRow = (int[])row3.Clone();
+            int[] combinedRow = (int[])row4.Clone();
 
             // Word is stored from col3 onwards - loop it.
             // Col1 is number of chars
             for (int i = 1; i < row1.Length - 1; i++)
             {
                 // Add row1 and row2 to row3
-                combinedRow[i] += (row1[i]+ row2[i]);
+                combinedRow[i] += (row1[i]+ row2[i] + row3[i]);
             }
 
             return combinedRow;
