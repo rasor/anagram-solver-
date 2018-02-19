@@ -80,12 +80,12 @@ namespace anagramsolver.helpers
                         var wordLong = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordLongPointer);
 
                         // did we get lucky?
-                        gotJackpot = checkMd5(ref numberOfJackpots, wordShort + " " + wordLong);
+                        gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {1}", wordShort, wordLong));
 
                         if (!gotJackpot)
                         {
                             // did we get lucky with reverse set?
-                            gotJackpot = checkMd5(ref numberOfJackpots, wordLong + " " + wordShort);
+                            gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {1}", wordLong, wordShort));
                         }
                     }
 

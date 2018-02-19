@@ -100,34 +100,35 @@ namespace anagramsolver.helpers
         private bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string word1, string word2, string word3, string word4)
         {
             bool gotJackpot = false;
-            // did we get lucky?
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word2 + " " + word3 + " " + word4); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word2 + " " + word4 + " " + word3); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word3 + " " + word2 + " " + word4); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word3 + " " + word4 + " " + word2); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word4 + " " + word2 + " " + word3); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word1 + " " + word4 + " " + word3 + " " + word2); }
+            // did we get lucky? - hardcoded permutations - to be faster than swap logic
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {1} {2} {3}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {1} {3} {2}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {2} {1} {3}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {2} {3} {1}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {3} {1} {2}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {3} {2} {1}", word1, word2, word3, word4)); }
 
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word1 + " " + word3 + " " + word4); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word1 + " " + word4 + " " + word3); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word3 + " " + word1 + " " + word4); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word3 + " " + word4 + " " + word1); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word4 + " " + word1 + " " + word3); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word2 + " " + word4 + " " + word3 + " " + word1); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{1} {0} {2} {3}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{1} {0} {3} {2}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{1} {2} {0} {3}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{1} {2} {3} {0}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{1} {3} {0} {2}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{1} {3} {2} {0}", word1, word2, word3, word4)); }
 
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word1 + " " + word2 + " " + word4); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word1 + " " + word4 + " " + word2); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word2 + " " + word1 + " " + word4); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word2 + " " + word4 + " " + word1); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word4 + " " + word1 + " " + word2); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word3 + " " + word4 + " " + word2 + " " + word1); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{2} {0} {1} {3}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{2} {0} {3} {1}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{2} {1} {0} {3}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{2} {1} {3} {0}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{2} {3} {0} {1}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{2} {3} {1} {0}", word1, word2, word3, word4)); }
 
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word1 + " " + word2 + " " + word3); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word1 + " " + word3 + " " + word2); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word2 + " " + word1 + " " + word3); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word2 + " " + word3 + " " + word1); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word3 + " " + word1 + " " + word2); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, word4 + " " + word3 + " " + word2 + " " + word1); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{3} {0} {1} {2}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{3} {0} {2} {1}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{3} {1} {0} {2}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{3} {1} {2} {0}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{3} {2} {0} {1}", word1, word2, word3, word4)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{3} {2} {1} {0}", word1, word2, word3, word4)); }
+
 
             return gotJackpot;
         }

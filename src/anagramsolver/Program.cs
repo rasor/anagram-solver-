@@ -160,10 +160,12 @@ namespace anagramsolver
             // D1B LoopSetsOf3Words
             var looper3 = new LoopSetsOf3WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
             numberOfJackpots = looper3.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots);
+            Console.WriteLine("");
 
             // D1C LoopSetsOf4Words
             var looper4 = new LoopSetsOf4WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
             numberOfJackpots = looper4.LoopSetsOf4WordsDoValidateAndCheckMd5(numberOfJackpots);
+            Console.WriteLine("");
         }
 
         static void ConsoleWriteLine(string stringToLog) {
