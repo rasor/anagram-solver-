@@ -1,6 +1,7 @@
 ﻿using anagramsolver.containers;
 using anagramsolver.models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -46,6 +47,11 @@ namespace anagramsolver.helpers
             var listOfPointersToWord2 = _tableByWordLength[currentSetLength.Word2Length];
             var listOfPointersToWord1 = _tableByWordLength[currentSetLength.Word1Length];
 
+            // List to avoid checking same sentence twice
+            HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength = new HashSet<int[]>(new ArrayComparer());
+            ulong uniqueListOfSentencesHavingWordsWithSameLengthCounter = 0;
+            ulong skippedChecksCounter = 0;
+
             // Since we know that there won't be any long words before len = 11, then we make the outer loop pass those 0 values first
             foreach (var word4Pointer in listOfPointersToWord4)
             {
@@ -69,19 +75,53 @@ namespace anagramsolver.helpers
                             if (isSubset)
                             {
                                 subsetCounter++;
-                                var word1 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word1Pointer);
-                                var word2 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word2Pointer);
-                                var word3 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word3Pointer);
-                                var word4 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word4Pointer);
 
-                                gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, word1, word2, word3, word4);
+                                // Now that we are down to the few sentences that are also subsets, then we'll keep them in an ordered unique list,
+                                // So those sentences having same words are not checked more than once
+                                if (currentSetLength.AnyOfSameLength)
+                                {
+                                    var currentSentence = new int[] { word1Pointer, word2Pointer, word3Pointer, word4Pointer };
+                                    Array.Sort(currentSentence);
+                                    // If we don't have that sentence, then do md5Check
+                                    if (!uniqueListOfSentencesHavingWordsWithSameLength.Contains(currentSentence))
+                                    {
+                                        uniqueListOfSentencesHavingWordsWithSameLengthCounter++;
+                                        uniqueListOfSentencesHavingWordsWithSameLength.Add(currentSentence);
+
+                                        gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word1Pointer, word2Pointer, word3Pointer, word4Pointer);
+                                    }
+                                    else
+                                    {
+                                        skippedChecksCounter++;
+                                    }
+                                }
+                                // No words of same lenght, so just do check
+                                else
+                                {
+                                    gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word1Pointer, word2Pointer, word3Pointer, word4Pointer);
+                                }
                             }
                             combinationCounter++;
                         }
                     }
                 }
             }
+            if (uniqueListOfSentencesHavingWordsWithSameLengthCounter > 0)
+            {
+                _consoleWriteLine("  UniqueListOfSentencesHavingWordsWithSameLength: " + uniqueListOfSentencesHavingWordsWithSameLengthCounter + ". SkippedChecks: " + skippedChecksCounter);
+            }
             return numberOfJackpots;
+        }
+
+        private bool FetchWordsAndCheckMd5(ref int numberOfJackpots, int word1Pointer, int word2Pointer, int word3Pointer, int word4Pointer)
+        {
+            var word1 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word1Pointer);
+            var word2 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word2Pointer);
+            var word3 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word3Pointer);
+            var word4 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word4Pointer);
+
+            bool gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, word1, word2, word3, word4);
+            return gotJackpot;
         }
 
         /// <summary>
