@@ -46,6 +46,10 @@ namespace anagramsolver.models
             {
                 nextSetWasSet = false;
             }
+
+            // Calculate AnyOfSameLength
+            _anyOfSameLength = (_word1Length == _word2Length || _word1Length == _word3Length || _word2Length == _word3Length);
+
             return nextSetWasSet;
         }
 

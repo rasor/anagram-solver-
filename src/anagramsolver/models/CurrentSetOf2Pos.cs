@@ -9,9 +9,14 @@ namespace anagramsolver.models
     /// </summary>
     public class CurrentSetOf2Pos
     {
+        // Lenght of words in set
         protected int _word1Length, _word2Length;
         public int Word1Length { get { return _word1Length - 1; } } //subtract 1 to match index in table
         public int Word2Length { get { return _word2Length - 1; } } //subtract 1 to match index in table
+
+        // Does any words in the set have same length?
+        protected bool _anyOfSameLength;
+        public bool AnyOfSameLength { get { return _anyOfSameLength; } }
 
         protected int _anagramLength;
         //protected int _hasUnEvenChars; //if even the then the middle words are both first and last word - so that row in the table needs special looping
@@ -42,6 +47,10 @@ namespace anagramsolver.models
             {
                 nextSetWasSet = false;
             }
+
+            // Calculate AnyOfSameLength
+            _anyOfSameLength = (_word1Length == _word2Length);
+
             return nextSetWasSet;
         }
 

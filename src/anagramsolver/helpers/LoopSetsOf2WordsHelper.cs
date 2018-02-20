@@ -1,6 +1,7 @@
 ﻿using anagramsolver.containers;
 using anagramsolver.models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -57,16 +58,19 @@ namespace anagramsolver.helpers
             var listOfPointersToWordLong =  _tableByWordLength[currentSetLength.Word2Length];
             var listOfPointersToWordShort = _tableByWordLength[currentSetLength.Word1Length];
 
+            // List to avoid checking same sentence twice
+            HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength = new HashSet<int[]>();
+
             // Since we know that there won't be any long words before len = 11, then we make the outer loop pass those 0 values first
-            foreach (var wordLongPointer in listOfPointersToWordLong)
+            foreach (var word2Pointer in listOfPointersToWordLong)
             {
-                foreach (var wordShortPointer in listOfPointersToWordShort)
+                foreach (var word1Pointer in listOfPointersToWordShort)
                 {
                     // ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter);
 
-                    var wordShortRow = _wordlistCtrl.TableFilter2_WordMatrix[wordShortPointer];
-                    var wordLongRow = _wordlistCtrl.TableFilter2_WordMatrix[wordLongPointer];
-                    var combinedWordToValidate = CombineRows(wordShortRow, wordLongRow);
+                    var word1Row = _wordlistCtrl.TableFilter2_WordMatrix[word1Pointer];
+                    var word2Row = _wordlistCtrl.TableFilter2_WordMatrix[word2Pointer];
+                    var combinedWordToValidate = CombineRows(word1Row, word2Row);
                     var isSubset = _anagramCtrl.IsSubset(combinedWordToValidate);
 
                     // Do MD5 check if the two words combined is still a subset of anagram
@@ -74,16 +78,27 @@ namespace anagramsolver.helpers
                     if (isSubset)
                     {
                         subsetCounter++;
-                        var wordShort = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordShortPointer);
-                        var wordLong = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordLongPointer);
 
-                        // did we get lucky?
-                        gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {1}", wordShort, wordLong));
-
-                        if (!gotJackpot)
+                        // Now that we are down to the few sentences that are also subsets, then we'll keep them in an ordered unique list,
+                        // So those sentences having same words are not checked more than once
+                        if (currentSetLength.AnyOfSameLength)
                         {
-                            // did we get lucky with reverse set?
-                            gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {1}", wordLong, wordShort));
+                            var currentSentence = new int[] { word1Pointer, word2Pointer};
+                            // If we don't have that sentence, then do md5Check
+                            if (!uniqueListOfSentencesHavingWordsWithSameLength.Contains(currentSentence))
+                            {
+                                uniqueListOfSentencesHavingWordsWithSameLength.Add(currentSentence);
+
+                                gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word2Pointer, word1Pointer);
+                            }
+                            else {
+                                //Console.WriteLine("Dublicate " + currentSentence.ToString());
+                            }
+                        }
+                        // No words of same lenght, so just do check
+                        else
+                        {
+                            gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word2Pointer, word1Pointer);
                         }
                     }
 
@@ -91,6 +106,19 @@ namespace anagramsolver.helpers
                 }
             }
             return numberOfJackpots;
+        }
+
+        private bool FetchWordsAndCheckMd5(ref int numberOfJackpots, int wordLongPointer, int wordShortPointer)
+        {
+            var word1 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordShortPointer);
+            var word2 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordLongPointer);
+
+            bool gotJackpot = false;
+            // did we get lucky?
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {1}", word1, word2)); }
+            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{1} {0}", word1, word2)); }
+
+            return gotJackpot;
         }
 
         /// <summary>
