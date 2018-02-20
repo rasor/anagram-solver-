@@ -59,7 +59,9 @@ namespace anagramsolver.helpers
             var listOfPointersToWordShort = _tableByWordLength[currentSetLength.Word1Length];
 
             // List to avoid checking same sentence twice
-            HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength = new HashSet<int[]>();
+            HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength = new HashSet<int[]>(new ArrayComparer());
+            ulong uniqueListOfSentencesHavingWordsWithSameLengthCounter = 0;
+            ulong skippedChecksCounter = 0;
 
             // Since we know that there won't be any long words before len = 11, then we make the outer loop pass those 0 values first
             foreach (var word2Pointer in listOfPointersToWordLong)
@@ -84,15 +86,17 @@ namespace anagramsolver.helpers
                         if (currentSetLength.AnyOfSameLength)
                         {
                             var currentSentence = new int[] { word1Pointer, word2Pointer};
+                            Array.Sort(currentSentence);
                             // If we don't have that sentence, then do md5Check
                             if (!uniqueListOfSentencesHavingWordsWithSameLength.Contains(currentSentence))
                             {
+                                uniqueListOfSentencesHavingWordsWithSameLengthCounter++;
                                 uniqueListOfSentencesHavingWordsWithSameLength.Add(currentSentence);
 
                                 gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word2Pointer, word1Pointer);
                             }
                             else {
-                                //Console.WriteLine("Dublicate " + currentSentence.ToString());
+                                skippedChecksCounter++;
                             }
                         }
                         // No words of same lenght, so just do check
@@ -104,6 +108,10 @@ namespace anagramsolver.helpers
 
                     combinationCounter++;
                 }
+            }
+            if (uniqueListOfSentencesHavingWordsWithSameLengthCounter > 0)
+            {
+                _consoleWriteLine("  UniqueListOfSentencesHavingWordsWithSameLength: " + uniqueListOfSentencesHavingWordsWithSameLengthCounter + ". SkippedChecks: " + skippedChecksCounter);
             }
             return numberOfJackpots;
         }
