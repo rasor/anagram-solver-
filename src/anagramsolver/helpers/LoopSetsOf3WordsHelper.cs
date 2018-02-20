@@ -24,26 +24,22 @@ namespace anagramsolver.helpers
             var hasUnEvenChars = totalLetters % 2; //if even the then the middle words are both first and last word - so that row in the table needs special looping
             var middleWordLetters = (totalLetters + hasUnEvenChars) / 2;
 
-            // Set initial set - [1, 1, 16] - a total of 18 chars
-            CurrentSetOfThreePos currentSetLength = new CurrentSetOfThreePos(totalLetters);
-            // Loop initial set - [1, 1, 16]
-            numberOfJackpots += Loop3WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
-            //_consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
-            // Continue with the rest of the sets - downto set [9, 9]
+            CurrentSetOf3Pos currentSetLength = new CurrentSetOf3Pos(totalLetters);
+            // Loop sets - [1, 1, 16] - downto set [6, 6, 6]
             while (currentSetLength.SetNextSet())
             {
                 numberOfJackpots += Loop3WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
-                //_consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
+                //_consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString());
             }
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". No more sets");
 
             return numberOfJackpots;
         }
 
-        private int Loop3WordCombinationsInCurrentSet(CurrentSetOfThreePos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
+        private int Loop3WordCombinationsInCurrentSet(CurrentSetOf3Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
             int numberOfJackpots = 0;
-            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
+            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString());
 
             var listOfPointersToWord3 = _tableByWordLength[currentSetLength.Word3Length];
             var listOfPointersToWord2 = _tableByWordLength[currentSetLength.Word2Length];

@@ -37,24 +37,22 @@ namespace anagramsolver.helpers
             var hasUnEvenChars = totalLetters % 2; //if even the then the middle words are both first and last word - so that row in the table needs special looping
             var middleWordLetters = (totalLetters + hasUnEvenChars) / 2;
 
-            // Set initial set - [1, 17] - a total of 18 chars
-            CurrentSetOfTwoPos currentSet = new CurrentSetOfTwoPos(totalLetters);
-            // Loop initial set - [1, 17]
-            numberOfJackpots += Loop2WordCombinationsInCurrentSet(currentSet, ref combinationCounter, ref subsetCounter);
-            // Continue with the rest of the sets - downto set [9, 9]
-            while (currentSet.SetNextSet())
+            CurrentSetOf2Pos currentSetLength = new CurrentSetOf2Pos(totalLetters);
+            // Loop sets - [1, 17] - downto set [9, 9]
+            while (currentSetLength.SetNextSet())
             {
-                numberOfJackpots += Loop2WordCombinationsInCurrentSet(currentSet, ref combinationCounter, ref subsetCounter);
+                numberOfJackpots += Loop2WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
+                //_consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString());
             }
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". No more sets");
 
             return numberOfJackpots;
         }
 
-        private int Loop2WordCombinationsInCurrentSet(CurrentSetOfTwoPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
+        private int Loop2WordCombinationsInCurrentSet(CurrentSetOf2Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
             int numberOfJackpots = 0;
-            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". CurrentSet: " + currentSetLength.ToString());
+            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString());
 
             var listOfPointersToWordLong =  _tableByWordLength[currentSetLength.Word2Length];
             var listOfPointersToWordShort = _tableByWordLength[currentSetLength.Word1Length];
