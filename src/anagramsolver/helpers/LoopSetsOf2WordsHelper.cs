@@ -53,10 +53,12 @@ namespace anagramsolver.helpers
         private int Loop2WordCombinationsInCurrentSet(CurrentSetOf2Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
             int numberOfJackpots = 0;
-            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString());
 
-            var listOfPointersToWordLong =  _tableByWordLength[currentSetLength.Word2Length];
-            var listOfPointersToWordShort = _tableByWordLength[currentSetLength.Word1Length];
+            var listOfPointersToWord2 =  _tableByWordLength[currentSetLength.Word2Length];
+            var listOfPointersToWord1 = _tableByWordLength[currentSetLength.Word1Length];
+
+            var currentSetCombinations = listOfPointersToWord1.Count * listOfPointersToWord2.Count;
+            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString() + " having " + currentSetCombinations + " combinations");
 
             // List to avoid checking same sentence twice
             HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength = new HashSet<int[]>(new ArrayComparer());
@@ -64,9 +66,9 @@ namespace anagramsolver.helpers
             ulong skippedChecksCounter = 0;
 
             // Since we know that there won't be any long words before len = 11, then we make the outer loop pass those 0 values first
-            foreach (var word2Pointer in listOfPointersToWordLong)
+            foreach (var word2Pointer in listOfPointersToWord2)
             {
-                foreach (var word1Pointer in listOfPointersToWordShort)
+                foreach (var word1Pointer in listOfPointersToWord1)
                 {
                     // ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter);
 

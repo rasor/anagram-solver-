@@ -40,12 +40,14 @@ namespace anagramsolver.helpers
         private int Loop4WordCombinationsInCurrentSet(CurrentSetOf4Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
             int numberOfJackpots = 0;
-            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString());
 
             var listOfPointersToWord4 = _tableByWordLength[currentSetLength.Word4Length];
             var listOfPointersToWord3 = _tableByWordLength[currentSetLength.Word3Length];
             var listOfPointersToWord2 = _tableByWordLength[currentSetLength.Word2Length];
             var listOfPointersToWord1 = _tableByWordLength[currentSetLength.Word1Length];
+
+            var currentSetCombinations = listOfPointersToWord1.Count * listOfPointersToWord2.Count * listOfPointersToWord3.Count * listOfPointersToWord4.Count;
+            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString() + " having " + currentSetCombinations + " combinations");
 
             // List to avoid checking same sentence twice
             HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength = new HashSet<int[]>(new ArrayComparer());
