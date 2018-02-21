@@ -166,6 +166,11 @@ namespace anagramsolver
             var looper4 = new LoopSetsOf4WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
             numberOfJackpots = looper4.LoopSetsOf4WordsDoValidateAndCheckMd5(numberOfJackpots);
             Console.WriteLine("");
+
+            // D1C LoopSetsOf4Words
+            var looper5 = new LoopSetsOf5WordsHelper(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
+            numberOfJackpots = looper5.LoopSetsOf5WordsDoValidateAndCheckMd5(numberOfJackpots);
+            Console.WriteLine("");
         }
 
         static void ConsoleWriteLine(string stringToLog) {
