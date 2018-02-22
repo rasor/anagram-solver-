@@ -39,6 +39,12 @@ namespace anagramsolver.helpers
 
         private int Loop3WordCombinationsInCurrentSet(CurrentSetOf3Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
+            // List from [0,1,2] to [2,1,0] = 6 permutations - used for swapping order of words in sentence
+            int[] permutationValues = new int[] { 0, 1, 2 };
+            var listOfWordPermutations = PermutationsCreator.GetPermutations(permutationValues, permutationValues.Length);
+            // Convert to a list for string.Format: "{0} {1} {2}"
+            var listOfWordPermutationsReplacementString = PermutationsCreator.ToReplacementString(listOfWordPermutations).ToArray(); ;
+
             int numberOfJackpots = 0;
 
             var listOfPointersToWord3 = _tableByWordLength[currentSetLength.Word3Length];
@@ -86,7 +92,7 @@ namespace anagramsolver.helpers
                                     uniqueListOfSentencesHavingWordsWithSameLengthCounter++;
                                     uniqueListOfSentencesHavingWordsWithSameLength.Add(currentSentence);
 
-                                    gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word1Pointer, word2Pointer, word3Pointer);
+                                    gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word1Pointer, word2Pointer, word3Pointer, listOfWordPermutationsReplacementString);
                                 }
                                 else
                                 {
@@ -96,7 +102,7 @@ namespace anagramsolver.helpers
                             // No words of same lenght, so just do check
                             else
                             {
-                                gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word1Pointer, word2Pointer, word3Pointer);
+                                gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word1Pointer, word2Pointer, word3Pointer, listOfWordPermutationsReplacementString);
                             }
                         }
                         combinationCounter++;
@@ -110,13 +116,13 @@ namespace anagramsolver.helpers
             return numberOfJackpots;
         }
 
-        private bool FetchWordsAndCheckMd5(ref int numberOfJackpots, int word1Pointer, int word2Pointer, int word3Pointer)
+        private bool FetchWordsAndCheckMd5(ref int numberOfJackpots, int word1Pointer, int word2Pointer, int word3Pointer, string[] listOfWordPermutationsReplacementString)
         {
             var word1 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word1Pointer);
             var word2 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word2Pointer);
             var word3 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word3Pointer);
 
-            bool gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, word1, word2, word3);
+            bool gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, word1, word2, word3, listOfWordPermutationsReplacementString);
             return gotJackpot;
         }
 
@@ -129,17 +135,21 @@ namespace anagramsolver.helpers
         /// <param name="word2"></param>
         /// <param name="word3"></param>
         /// <returns></returns>
-        private bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string word1, string word2, string word3)
+        private bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string word1, string word2, string word3, string[] listOfWordPermutationsReplacementString)
         {
             bool gotJackpot = false;
-            // did we get lucky? - hardcoded permutations - to be faster than swap logic
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {1} {2}", word1, word2, word3)); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {2} {1}", word1, word2, word3)); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{1} {0} {2}", word1, word2, word3)); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{1} {2} {0}", word1, word2, word3)); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{2} {0} {1}", word1, word2, word3)); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{2} {1} {0}", word1, word2, word3)); }
-
+            // did we get lucky? - loop permutations of the words in the sentence
+            foreach (var permutationReplacementString in listOfWordPermutationsReplacementString)
+            {
+                if (!gotJackpot)
+                {
+                    gotJackpot = checkMd5(ref numberOfJackpots, string.Format(permutationReplacementString, word1, word2, word3));
+                }
+                else
+                {
+                    break;
+                }
+            }
             return gotJackpot;
         }
 
