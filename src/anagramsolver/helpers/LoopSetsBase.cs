@@ -40,7 +40,7 @@ namespace anagramsolver.helpers
             var words = new string[wordPointers.Length];
             for (int i = 0; i < wordPointers.Length; i++)
             {
-                words[i] = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordPointers[i]);
+                words[i] = _wordlistCtrl.ListFilter1_WordArrayHavingAllowedChars[wordPointers[i]];
             }
             bool gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, words, listOfWordPermutationsReplacementString);
             return gotJackpot;
