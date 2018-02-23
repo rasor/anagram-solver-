@@ -29,8 +29,8 @@ namespace anagramsolver.helpers
             // Loop sets - [1, 1, 1, 1, 14] - downto set [3, 3, 4, 4, 4] - 3,3,3,4,5
             while (currentSetLength.SetNextSet())
             {
-                //numberOfJackpots += Loop5WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
-                _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString());
+                numberOfJackpots += Loop5WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
+                //_consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString());
             }
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". No more sets");
 
@@ -157,7 +157,7 @@ namespace anagramsolver.helpers
             {
                 if (!gotJackpot)
                 {
-                    gotJackpot = checkMd5(ref numberOfJackpots, string.Format(permutationReplacementString, word1, word2, word3, word4));
+                    gotJackpot = checkMd5(ref numberOfJackpots, string.Format(permutationReplacementString, word1, word2, word3, word4, word5));
                 }
                 else
                 {
