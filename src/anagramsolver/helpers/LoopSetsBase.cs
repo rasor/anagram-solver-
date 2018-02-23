@@ -37,6 +37,41 @@ namespace anagramsolver.helpers
             return gotJackpot;
         }
 
+        /// <summary>
+        /// Add number of each letter of three words, 
+        /// so the sum can be compared with the sum in the anagram
+        /// Rows contains no-of-chars in each word.
+        /// CombineRows() sums up no-of-chars for all words in a sentence
+        /// </summary>
+        /// <param name="rows">No-of-chars in each word</param>
+        /// <returns>Summed up no-of-chars for all words in a sentence</returns>
+        protected int[] CombineRows(int[][] rows)
+        {
+            int[] combinedRow;
+            var noOfRows = rows.Length;
+            if (noOfRows > 0)
+            {
+                var lenOfaRow = rows[0].Length;
+                // Assign space for result
+                combinedRow = new int[lenOfaRow];
+
+                // Word is stored from col3 onwards - loop it.
+                // Col1 is number of chars
+                for (int col = 1; col < lenOfaRow; col++)
+                {
+                    // Combine a column
+                    for (int row = 0; row < noOfRows; row++)
+                    {
+                        combinedRow[col] += rows[row][col];
+                    }
+                }
+            }
+            else
+            {
+                throw new ApplicationException("CombineRows() needs two or more rows");
+            }
+            return combinedRow;
+        }
 
     }
 }
