@@ -63,7 +63,7 @@ namespace anagramsolver.helpers
             var listOfPointersToWord2 =  _tableByWordLength[currentSetLength.Word2Length];
             var listOfPointersToWord1 = _tableByWordLength[currentSetLength.Word1Length];
 
-            long currentSetCombinations = listOfPointersToWord1.Count * listOfPointersToWord2.Count;
+            ulong currentSetCombinations = (ulong)(listOfPointersToWord1.Count * listOfPointersToWord2.Count);
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString() + " having " + currentSetCombinations + " combinations");
 
             // List to avoid checking same sentence twice
