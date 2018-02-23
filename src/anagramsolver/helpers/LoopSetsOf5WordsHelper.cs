@@ -79,7 +79,8 @@ namespace anagramsolver.helpers
                                 var word3Row = _wordlistCtrl.TableFilter2_WordMatrix[word3Pointer];
                                 var word4Row = _wordlistCtrl.TableFilter2_WordMatrix[word4Pointer];
                                 var word5Row = _wordlistCtrl.TableFilter2_WordMatrix[word5Pointer];
-                                var combinedWordToValidate = CombineRows(word1Row, word2Row, word3Row, word4Row, word5Row);
+                                var rows = new int[][] { word1Row, word2Row, word3Row, word4Row, word5Row };
+                                var combinedWordToValidate = CombineRows(rows);
                                 var isSubset = _anagramCtrl.IsSubset(combinedWordToValidate);
 
                                 // Do MD5 check if the two words combined is still a subset of anagram
@@ -165,32 +166,6 @@ namespace anagramsolver.helpers
                 }
             }
             return gotJackpot;
-        }
-
-        /// <summary>
-        /// Add number of each letter of three words, 
-        /// so the sum can be compared with the sum in the anagram
-        /// </summary>
-        /// <param name="row1">number of each letter in word1</param>
-        /// <param name="row2">number of each letter in word2</param>
-        /// <param name="row3">number of each letter in word3</param>
-        /// <param name="row4">number of each letter in word4</param>
-        /// <param name="row5">number of each letter in word5</param>
-        /// <returns>number of each letter in both words</returns>
-        private int[] CombineRows(int[] row1, int[] row2, int[] row3, int[] row4, int[] row5)
-        {
-            // Make a copy of row3
-            int[] combinedRow = (int[])row5.Clone();
-
-            // Word is stored from col3 onwards - loop it.
-            // Col1 is number of chars
-            for (int i = 1; i < row1.Length - 1; i++)
-            {
-                // Add row1 and row2 to row3
-                combinedRow[i] += (row1[i]+ row2[i] + row3[i] + row4[i]);
-            }
-
-            return combinedRow;
         }
     }
 }
