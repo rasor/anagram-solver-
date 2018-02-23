@@ -52,6 +52,12 @@ namespace anagramsolver.helpers
 
         private int Loop2WordCombinationsInCurrentSet(CurrentSetOf2Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
+            // List from [0,1] to [1,0] = 2 permutations - used for swapping order of words in sentence
+            int[] permutationValues = new int[] { 0, 1 };
+            var listOfWordPermutations = PermutationsCreator.GetPermutations(permutationValues, permutationValues.Length);
+            // Convert to a list for string.Format: "{0} {1}"
+            var listOfWordPermutationsReplacementString = PermutationsCreator.ToReplacementString(listOfWordPermutations).ToArray(); ;
+
             int numberOfJackpots = 0;
 
             var listOfPointersToWord2 =  _tableByWordLength[currentSetLength.Word2Length];
@@ -83,12 +89,13 @@ namespace anagramsolver.helpers
                     if (isSubset)
                     {
                         subsetCounter++;
+                        // Put words in a list, so they can be passed on as a collection
+                        int[] currentSentence = new int[] { word1Pointer, word2Pointer };
 
                         // Now that we are down to the few sentences that are also subsets, then we'll keep them in an ordered unique list,
                         // So those sentences having same words are not checked more than once
                         if (currentSetLength.AnyOfSameLength)
                         {
-                            var currentSentence = new int[] { word1Pointer, word2Pointer};
                             Array.Sort(currentSentence);
                             // If we don't have that sentence, then do md5Check
                             if (!uniqueListOfSentencesHavingWordsWithSameLength.Contains(currentSentence))
@@ -96,7 +103,7 @@ namespace anagramsolver.helpers
                                 uniqueListOfSentencesHavingWordsWithSameLengthCounter++;
                                 uniqueListOfSentencesHavingWordsWithSameLength.Add(currentSentence);
 
-                                gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word2Pointer, word1Pointer);
+                                gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, currentSentence, listOfWordPermutationsReplacementString);
                             }
                             else {
                                 skippedChecksCounter++;
@@ -105,7 +112,7 @@ namespace anagramsolver.helpers
                         // No words of same lenght, so just do check
                         else
                         {
-                            gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word2Pointer, word1Pointer);
+                            gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, currentSentence, listOfWordPermutationsReplacementString);
                         }
                     }
 
@@ -117,19 +124,6 @@ namespace anagramsolver.helpers
                 _consoleWriteLine("  UniqueListOfSentencesHavingWordsWithSameLength: " + uniqueListOfSentencesHavingWordsWithSameLengthCounter + ". SkippedChecks: " + skippedChecksCounter);
             }
             return numberOfJackpots;
-        }
-
-        private bool FetchWordsAndCheckMd5(ref int numberOfJackpots, int wordLongPointer, int wordShortPointer)
-        {
-            var word1 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordShortPointer);
-            var word2 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordLongPointer);
-
-            bool gotJackpot = false;
-            // did we get lucky?
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{0} {1}", word1, word2)); }
-            if (!gotJackpot) { gotJackpot = checkMd5(ref numberOfJackpots, string.Format("{1} {0}", word1, word2)); }
-
-            return gotJackpot;
         }
     }
 }

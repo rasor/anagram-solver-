@@ -88,12 +88,13 @@ namespace anagramsolver.helpers
                                 if (isSubset)
                                 {
                                     subsetCounter++;
+                                    // Put words in a list, so they can be passed on as a collection
+                                    int[] currentSentence = new int[] { word1Pointer, word2Pointer, word3Pointer, word4Pointer, word5Pointer };
 
                                     // Now that we are down to the few sentences that are also subsets, then we'll keep them in an ordered unique list,
                                     // So those sentences having same words are not checked more than once
                                     //if (currentSetLength.AnyOfSameLength)
                                     //{
-                                    //    var currentSentence = new int[] { word1Pointer, word2Pointer, word3Pointer, word4Pointer, word5Pointer };
                                     //    Array.Sort(currentSentence);
                                     //    // If we don't have that sentence, then do md5Check
                                     //    if (!uniqueListOfSentencesHavingWordsWithSameLength.Contains(currentSentence))
@@ -101,7 +102,7 @@ namespace anagramsolver.helpers
                                     //        uniqueListOfSentencesHavingWordsWithSameLengthCounter++;
                                     //        uniqueListOfSentencesHavingWordsWithSameLength.Add(currentSentence);
 
-                                    //        gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word1Pointer, word2Pointer, word3Pointer, word4Pointer, word5Pointer, listOfWordPermutationsReplacementString);
+                                    //        gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, currentSentence, listOfWordPermutationsReplacementString);
                                     //    }
                                     //    else
                                     //    {
@@ -111,7 +112,7 @@ namespace anagramsolver.helpers
                                     //// No words of same lenght, so just do check
                                     //else
                                     {
-                                        gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, word1Pointer, word2Pointer, word3Pointer, word4Pointer, word5Pointer, listOfWordPermutationsReplacementString);
+                                        gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, currentSentence, listOfWordPermutationsReplacementString);
                                     }
                                 }
                                 combinationCounter++;
@@ -125,18 +126,6 @@ namespace anagramsolver.helpers
                 _consoleWriteLine("  UniqueListOfSentencesHavingWordsWithSameLength: " + uniqueListOfSentencesHavingWordsWithSameLengthCounter + ". SkippedChecks: " + skippedChecksCounter);
             }
             return numberOfJackpots;
-        }
-
-        private bool FetchWordsAndCheckMd5(ref int numberOfJackpots, int word1Pointer, int word2Pointer, int word3Pointer, int word4Pointer, int word5Pointer, string[] listOfWordPermutationsReplacementString)
-        {
-            var word1 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word1Pointer);
-            var word2 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word2Pointer);
-            var word3 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word3Pointer);
-            var word4 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word4Pointer);
-            var word5 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word5Pointer);
-            var words = new string[] { word1, word2, word3, word4, word5 };
-            bool gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, words, listOfWordPermutationsReplacementString);
-            return gotJackpot;
         }
     }
 }
