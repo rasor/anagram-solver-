@@ -1,6 +1,7 @@
 ﻿using anagramsolver.containers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace anagramsolver.helpers
@@ -24,6 +25,25 @@ namespace anagramsolver.helpers
             _wordlistCtrl = WordlistCtrl;
             _tableByWordLength = _wordlistCtrl.TableByWordLength;
             _md5Hlpr = new Md5Helper(_md5HashComputer, _anagramCtrl.Md5Hashes);
+        }
+
+        /// <summary>
+        /// Fetch real words from ListFilter1_WorddictHavingAllowedChars
+        /// And check for MD5
+        /// </summary>
+        /// <param name="numberOfJackpots"></param>
+        /// <param name="wordPointers"></param>
+        /// <param name="listOfWordPermutationsReplacementString"></param>
+        /// <returns></returns>
+        protected bool FetchWordsAndCheckMd5(ref int numberOfJackpots, int[] wordPointers, string[] listOfWordPermutationsReplacementString)
+        {
+            var words = new string[wordPointers.Length];
+            for (int i = 0; i < wordPointers.Length; i++)
+            {
+                words[i] = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordPointers[i]);
+            }
+            bool gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, words, listOfWordPermutationsReplacementString);
+            return gotJackpot;
         }
 
         /// <summary>
