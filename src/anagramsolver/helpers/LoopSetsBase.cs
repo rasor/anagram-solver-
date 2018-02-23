@@ -26,6 +26,32 @@ namespace anagramsolver.helpers
             _md5Hlpr = new Md5Helper(_md5HashComputer, _anagramCtrl.Md5Hashes);
         }
 
+        /// <summary>
+        /// When this method is called we know that the characters in the sentence match (isSubset of) anagram
+        /// In here we loop through the order of the words and check md5
+        /// </summary>
+        /// <param name="numberOfJackpots"></param>
+        /// <param name="words"></param>
+        /// <param name="listOfWordPermutationsReplacementString"></param>
+        /// <returns></returns>
+        protected bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string[] words, string[] listOfWordPermutationsReplacementString)
+        {
+            bool gotJackpot = false;
+            // did we get lucky? - loop permutations of the words in the sentence
+            foreach (var permutationReplacementString in listOfWordPermutationsReplacementString)
+            {
+                if (!gotJackpot)
+                {
+                    gotJackpot = checkMd5(ref numberOfJackpots, string.Format(permutationReplacementString, words));
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return gotJackpot;
+        }
+
         protected bool checkMd5(ref int numberOfJackpots, string sentenceToCheck)
         {
             bool gotJackpot = _md5Hlpr.VerifyMd5Hash(sentenceToCheck);

@@ -122,35 +122,8 @@ namespace anagramsolver.helpers
             var word1 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word1Pointer);
             var word2 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word2Pointer);
             var word3 = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(word3Pointer);
-
-            bool gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, word1, word2, word3, listOfWordPermutationsReplacementString);
-            return gotJackpot;
-        }
-
-        /// <summary>
-        /// When this method is called we know that the characters in the sentence match (isSubset of) anagram
-        /// In here we loop through the order of the words and check md5
-        /// </summary>
-        /// <param name="numberOfJackpots"></param>
-        /// <param name="word1"></param>
-        /// <param name="word2"></param>
-        /// <param name="word3"></param>
-        /// <returns></returns>
-        private bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string word1, string word2, string word3, string[] listOfWordPermutationsReplacementString)
-        {
-            bool gotJackpot = false;
-            // did we get lucky? - loop permutations of the words in the sentence
-            foreach (var permutationReplacementString in listOfWordPermutationsReplacementString)
-            {
-                if (!gotJackpot)
-                {
-                    gotJackpot = checkMd5(ref numberOfJackpots, string.Format(permutationReplacementString, word1, word2, word3));
-                }
-                else
-                {
-                    break;
-                }
-            }
+            var words = new string[] { word1, word2, word3 };
+            bool gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, words, listOfWordPermutationsReplacementString);
             return gotJackpot;
         }
     }
