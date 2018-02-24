@@ -1,7 +1,5 @@
 using Xunit;
-using anagramsolver.models;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace anagramsolverTests
 {

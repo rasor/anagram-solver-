@@ -3,8 +3,6 @@ using anagramsolver.helpers;
 using System.Security.Cryptography;
 using anagramsolver.containers;
 using anagramsolver.models;
-using anagramsolver.helpers;
-using System.Linq;
 using System.Diagnostics;
 
 namespace anagramsolverTests
@@ -17,7 +15,10 @@ namespace anagramsolverTests
         static readonly string[] md5Hashes =
             { "e4820b45d2277f3844eac66c903e84be", "23170acc097c24edb98fc5488ab033fe", "665e5bcb0c20062fe8abaaf4628bb154" };
 
-        private readonly LoopSetsBase _LoopSetsBase;
+        /// <summary>
+        /// System under test
+        /// </summary>
+        private readonly LoopSetsBase _Sut;
 
         public LoopSetsBaseTests()
         {
@@ -27,7 +28,7 @@ namespace anagramsolverTests
             var anagramCtrl = new AnagramContainer(anagram, md5Hashes);
             var wordlistCtrl = new WordlistContainer(WORDLISTPATH);
 
-            _LoopSetsBase = new LoopSetsBase(Dummy, MD5.Create(), anagramCtrl, wordlistCtrl);
+            _Sut = new LoopSetsBase(Dummy, MD5.Create(), anagramCtrl, wordlistCtrl);
         }
 
         private void Dummy(string input) {
@@ -43,17 +44,17 @@ namespace anagramsolverTests
 
             // Expect words to match one of the md5Hashes
             bool expected = true;
-            bool actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            bool actual = _Sut.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
 
             // Other order should also succeed
             words = new string[] { "stout", "yawls", "printout" };
-            actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            actual = _Sut.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
 
             // It should also work with auto-created permutations
             listOfWordPermutationsReplacementStrings = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(3);
-            actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            actual = _Sut.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
         }
 
@@ -67,7 +68,7 @@ namespace anagramsolverTests
 
             // Expect fail, when words are not put in right order
             bool expected = false;
-            bool actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            bool actual = _Sut.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
         }
 
@@ -81,7 +82,7 @@ namespace anagramsolverTests
 
             // Expect words not to match one of the md5Hashes
             bool expected = false;
-            bool actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            bool actual = _Sut.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
         }
 
