@@ -5,18 +5,10 @@ using System.Linq;
 
 namespace anagramsolverTests
 {
-    public class UnitTest1
+    public class UnrelatedTests
     {
         [Fact]
-        public void Test1()
-        {
-            string expected = "poultry";
-            string actual = new StringBox("poultry abc").RawData;
-            Assert.Contains(expected, actual);
-        }
-
-        [Fact]
-        public void Test2()
+        public void TestingHashSet()
         {
             HashSet<int> intHashSetOne = new HashSet<int>()
             {

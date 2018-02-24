@@ -48,9 +48,29 @@ namespace anagramsolverTests
             var words = new string[] { "yawls", "stout", "printout" };
             string[] listOfWordPermutationsReplacementStrings = CreateListOfWordPermutationsReplacementStrings();
 
+            // Expect words to match one of the md5Hashes
             bool expected = true;
             bool actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
+
+            // Other order should also succeed
+            words = new string[] { "stout", "yawls", "printout" };
+            actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void GivenWords_WhenWordsInCorrect_ShouldReturnFalse()
+        {
+            int noOfJackpots = 0;
+            var words = new string[] { "pawls", "stout", "printout" };
+            string[] listOfWordPermutationsReplacementStrings = CreateListOfWordPermutationsReplacementStrings();
+
+            // Expect words not to match one of the md5Hashes
+            bool expected = false;
+            bool actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            Assert.Equal(expected, actual);
+        }
+
     }
 }
