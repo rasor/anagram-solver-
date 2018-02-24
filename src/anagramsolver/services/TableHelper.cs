@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace anagramsolver.helpers
+namespace anagramsolver.services
 {
     /// <summary>
     /// Various helper Methods

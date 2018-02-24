@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace anagramsolver.helpers
+namespace anagramsolver.services
 {
     public class LoopSetsBase
     {

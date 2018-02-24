@@ -3,7 +3,7 @@ using anagramsolver.containers;
 using anagramsolver.models;
 using System.Linq;
 using System.Security.Cryptography;
-using anagramsolver.helpers;
+using anagramsolver.services;
 using Microsoft.Extensions.Configuration;
 
 namespace anagramsolver

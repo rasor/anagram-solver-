@@ -2,7 +2,7 @@
 using System.Text;
 using System.Security.Cryptography;
 
-namespace anagramsolver.helpers
+namespace anagramsolver.services
 {
     /// <summary>
     /// Methods for computing md5

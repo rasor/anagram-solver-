@@ -1,6 +1,6 @@
 ﻿using Xunit;
 using Moq;
-using anagramsolver.helpers;
+using anagramsolver.services;
 using System.Security.Cryptography;
 using anagramsolver.containers;
 using anagramsolver.models;

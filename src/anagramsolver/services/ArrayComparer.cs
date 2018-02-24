@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace anagramsolver.helpers
+namespace anagramsolver.services
 {
     /// <summary>
     /// http://www.java2s.com/Tutorials/CSharp/System.Collections.Generic/HashSet_T_/C_HashSet_T_HashSet_T_IEqualityComparer_T_.htm

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace anagramsolver.helpers
+namespace anagramsolver.services
 {
     public static class PermutationsCreator
     {

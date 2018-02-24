@@ -1,5 +1,5 @@
 ﻿using Xunit;
-using anagramsolver.helpers;
+using anagramsolver.services;
 
 namespace anagramsolverTests
 {

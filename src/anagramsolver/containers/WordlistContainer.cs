@@ -1,4 +1,4 @@
-﻿using anagramsolver.helpers;
+﻿using anagramsolver.services;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
