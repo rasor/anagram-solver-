@@ -9,6 +9,8 @@ namespace anagramsolver.containers
         StringBox LettersNotInAnagram { get; }
         string[] Md5Hashes { get; }
 
+        StringBox CreateSetOfLettersNotInAnagram();
+        void CreateHeaderRow();
         bool IsSubset(int[] row);
     }
 }

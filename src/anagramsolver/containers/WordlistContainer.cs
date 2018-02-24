@@ -1,10 +1,9 @@
 ﻿using anagramsolver.helpers;
-using anagramsolver.models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 
 namespace anagramsolver.containers
 {
@@ -30,11 +29,15 @@ namespace anagramsolver.containers
         private List<List<int>> _tableByWordLength;
         public List<List<int>> TableByWordLength { get { return _tableByWordLength; } }
 
+        public WordlistContainer(IConfigurationRoot config)
+            : this(config["AppSettings:WordlistPath"])
+        {
+        }
+
         public WordlistContainer(string WordlistPath)
         {
             // Orginal list
             var wordArray = File.ReadAllLines(WordlistPath);
-            //_wordOfCharList = wordArray;
             _listUnfiltered0_Wordlist = wordArray.ToList();
         }
 
@@ -42,7 +45,7 @@ namespace anagramsolver.containers
         /// Load wordlist together with wordlength, remove duplicates 
         /// </summary>
         /// <param name="anagramCtrl"></param>
-        internal void Filter1_CreateListOfWordsHavingLettersFromAnagram(AnagramContainer anagramCtrl)
+        public void Filter1_CreateListOfWordsHavingLettersFromAnagram(IAnagramContainer anagramCtrl)
         {
             // preapare lists
             _listFilter1_WorddictHavingAllowedChars = new Dictionary<string, int>();
@@ -97,7 +100,7 @@ namespace anagramsolver.containers
         /// It is important that this table is very fast to access, so we use a simple array with fixed size
         /// </summary>
         /// <param name="anagramCtrl"></param>
-        internal void Filter2_CreateTableOfWordsBeingSubsetOfAnagram(AnagramContainer anagramCtrl)
+        public void Filter2_CreateTableOfWordsBeingSubsetOfAnagram(IAnagramContainer anagramCtrl)
         {
             var hlpr = new TableHelper();
             // The "table header" - ailnoprstuwy
@@ -135,7 +138,7 @@ namespace anagramsolver.containers
         /// </summary>
         /// <param name="anagramCtrl"></param>
         /// <returns></returns>
-        internal int UpdateCol2InTableFilter2(AnagramContainer anagramCtrl)
+        public int UpdateCol2InTableFilter2(IAnagramContainer anagramCtrl)
         {
             // No number of letters must be larger than in the anagram row
             // Count number of words being subset
@@ -160,7 +163,7 @@ namespace anagramsolver.containers
         /// </summary>
         /// <param name="AnagramCtrl"></param>
         /// <returns></returns>
-        internal List<int> CreateTableByWordLength(AnagramContainer AnagramCtrl)
+        public List<int> CreateTableByWordLength(IAnagramContainer AnagramCtrl)
         {
             var anagramLenghtWithoutSpaces = AnagramCtrl.Anagram.RawDataWithoutSpace.Length;
             // Assuming the anagram is made up of minimum 2 words 

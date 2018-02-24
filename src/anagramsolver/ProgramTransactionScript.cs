@@ -10,17 +10,21 @@ namespace anagramsolver
 {
     public class ProgramTransactionScript
     {
-        static string _configAnagram;
-        static string[] _configMd5Hashes;
-        static string _configWordlistPath;
+        private static string _configAnagram;
+        private static string[] _configMd5Hashes;
+        private static string _configWordlistPath;
 
-        public ProgramTransactionScript(IConfigurationRoot config)
+        private static IWordlistContainer _injectedWordlistContainer;
+
+        public ProgramTransactionScript(IConfigurationRoot config, IWordlistContainer wordlistContainer)
         {
             // Input data
             _configAnagram = config["AppSettings:Anagram"];
             _configMd5Hashes = new string[] 
             { config["AppSettings:Md5Hashes:0"], config["AppSettings:Md5Hashes:1"], config["AppSettings:Md5Hashes:2"] };
             _configWordlistPath = config["AppSettings:WordlistPath"];
+
+            _injectedWordlistContainer = wordlistContainer;
         }
 
         public void Main(string[] args)
@@ -40,7 +44,7 @@ namespace anagramsolver
 
             // A2. Load wordlistdata
             ConsoleWriteLine("A2_LoadWordlist()");
-            var wordlistCtrl = A2_LoadWordlist();
+            ConsoleWriteLine(" The unfiltered input wordlist contains " + _injectedWordlistContainer.ListUnfiltered0_Wordlist.Count + " lines");
             Console.WriteLine("");
 
             // B1. Decrease anagram the dataset
@@ -50,17 +54,17 @@ namespace anagramsolver
 
             // B2. Reduce wordlist the dataset
             ConsoleWriteLine("B2_ReduceTheWordlistDataset()");
-            B2_ReduceTheWordlistDataset(anagramCtrl, wordlistCtrl);
+            B2_ReduceTheWordlistDataset(anagramCtrl, _injectedWordlistContainer);
             Console.WriteLine("");
 
             // C1. Find valid words in dataset being subset of anagram
             ConsoleWriteLine("C1_FindValidWordsInDataset()");
-            C1_FindValidWordsInDataset(anagramCtrl, wordlistCtrl);
+            C1_FindValidWordsInDataset(anagramCtrl, _injectedWordlistContainer);
             Console.WriteLine("");
 
             // C2. Order Words In Dataset By Lenght
             ConsoleWriteLine("C2_OrderWordsInDatasetByLenght()");
-            var longestWord = C2_OrderWordsInDatasetByLenght(anagramCtrl, wordlistCtrl);
+            var longestWord = C2_OrderWordsInDatasetByLenght(anagramCtrl, _injectedWordlistContainer);
             Console.WriteLine("");
 
             using (MD5 md5HashComputer = MD5.Create())
@@ -68,7 +72,7 @@ namespace anagramsolver
 
                 // D. Find valid combinations with 2 words
                 ConsoleWriteLine("D1_FindValidCombinations()");
-                D1_FindValidCombinations(md5HashComputer, longestWord, anagramCtrl, wordlistCtrl);
+                D1_FindValidCombinations(md5HashComputer, longestWord, anagramCtrl, _injectedWordlistContainer);
                 Console.WriteLine("");
             }
 
@@ -76,7 +80,7 @@ namespace anagramsolver
             Console.ReadKey();
         }
 
-        static AnagramContainer A1_LoadAnagram()
+        static IAnagramContainer A1_LoadAnagram()
         {
             // Put data in a model, where it can be represented in various ways
             var anagram = new StringBox(_configAnagram);
@@ -88,14 +92,7 @@ namespace anagramsolver
             return anagramCtrl;
         }
 
-        static WordlistContainer A2_LoadWordlist()
-        {
-            var wordlistCtrl = new WordlistContainer(_configWordlistPath);
-            ConsoleWriteLine(" The unfiltered input wordlist contains " + wordlistCtrl.ListUnfiltered0_Wordlist.Count + " lines");
-            return wordlistCtrl;
-        }
-
-        static void B1_ReduceTheAnagramDataset(AnagramContainer AnagramCtrl)
+        static void B1_ReduceTheAnagramDataset(IAnagramContainer AnagramCtrl)
         {
             // B1A Create a set of letters not in the anagram
             // - This will will make it possible to remove words from the list containing any of those letters
@@ -103,7 +100,7 @@ namespace anagramsolver
             ConsoleWriteLine(" These distinct letters does the anagram NOT contain: '" + AnagramCtrl.LettersNotInAnagram.RawData + "'");
         }
 
-        static void B2_ReduceTheWordlistDataset(AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl)
+        static void B2_ReduceTheWordlistDataset(IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
         {
             // B2A Create a list of words only containing letters from the anagram
             // - This will reduce the list to approx 2500 words - duration: approx 2 secs
@@ -117,7 +114,7 @@ namespace anagramsolver
             ConsoleWriteLine(" Table_Filter2 - created - with same number of rows as in List_Filter1");
         }
 
-        static void C1_FindValidWordsInDataset(AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl)
+        static void C1_FindValidWordsInDataset(IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
         {
             // C1A As in the Matrix count letters in the anagram
             AnagramCtrl.CreateHeaderRow();
@@ -131,7 +128,7 @@ namespace anagramsolver
             ConsoleWriteLine(" Table_Filter2 - contains " + noOfWordsBeingSubset + " words being subsets of anagram");
         }
 
-        static int C2_OrderWordsInDatasetByLenght(AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl)
+        static int C2_OrderWordsInDatasetByLenght(IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
         {
             // C2B Create a table of valid words having a List of words with same length as rows
             var listOfWordLenghts = WordlistCtrl.CreateTableByWordLength(AnagramCtrl);
@@ -150,7 +147,7 @@ namespace anagramsolver
         /// <param name="longestWord"></param>
         /// <param name="AnagramCtrl"></param>
         /// <param name="WordlistCtrl"></param>
-        static void D1_FindValidCombinations(MD5 Md5HashComputer, int longestWord, AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl)
+        static void D1_FindValidCombinations(MD5 Md5HashComputer, int longestWord, IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
         {
             // Create permutationsets-loop-algoritm.
             // In the loop do
@@ -189,7 +186,7 @@ namespace anagramsolver
             Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + " " + stringToLog);
         }
 
-        static void PrintListFilter1(WordlistContainer WordlistCtrl)
+        static void PrintListFilter1(IWordlistContainer WordlistCtrl)
         {
             foreach (var kvp in WordlistCtrl.ListFilter1_WorddictHavingAllowedChars)
             {

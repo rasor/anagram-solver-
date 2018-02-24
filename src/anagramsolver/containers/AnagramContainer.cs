@@ -37,7 +37,7 @@ namespace anagramsolver.containers
         /// Find all letters that are not in the anagram
         /// </summary>
         /// <returns>Set of letters not in the anagram</returns>
-        internal StringBox CreateSetOfLettersNotInAnagram()
+        public StringBox CreateSetOfLettersNotInAnagram()
         {
             string allLettersA2Z = "abcdefghijklmnopqrstuvxyz";
             string someMoreLettersSeenInWordList = "éÅöü'";
@@ -52,7 +52,7 @@ namespace anagramsolver.containers
         /// Create a row - like the rows in the TableFilter2_WordMatrix - but for the anagram.
         /// This row is our result / sum up / conclusion
         /// </summary>
-        internal void CreateHeaderRow()
+        public void CreateHeaderRow()
         {
             // - col0 is index to ListFilter1 - NOT IN USE
             // - col1 is length of word - NOT IN USE
