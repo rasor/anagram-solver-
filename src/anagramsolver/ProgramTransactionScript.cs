@@ -10,47 +10,39 @@ namespace anagramsolver
 {
     public class ProgramTransactionScript
     {
-        private static string _configAnagram;
-        private static string[] _configMd5Hashes;
-        private static string _configWordlistPath;
-
         private static IAnagramContainer _injectedAnagramContainer;
         private static IWordlistContainer _injectedWordlistContainer;
 
-        public ProgramTransactionScript(IConfigurationRoot config, IAnagramContainer anagramContainer, IWordlistContainer wordlistContainer)
-        {
-            // Input data
-            _configAnagram = config["AppSettings:Anagram"];
-            _configMd5Hashes = new string[] 
-            { config["AppSettings:Md5Hashes:0"], config["AppSettings:Md5Hashes:1"], config["AppSettings:Md5Hashes:2"] };
-            _configWordlistPath = config["AppSettings:WordlistPath"];
+        // Pseudo:
+        // A. Load Data
+        // B. Decrease the dataset
+        // C. Find valid words in dataset
 
-            _injectedAnagramContainer = anagramContainer;
-            _injectedWordlistContainer = wordlistContainer;
-        }
-
-        public void Main(string[] args)
+        public ProgramTransactionScript(IConfigurationRoot config,
+            IAnagramContainer anagramContainer, IWordlistContainer wordlistContainer)
         {
             Console.WriteLine("Hello from AnagramSolver!");
             Console.WriteLine("");
 
-            // Pseudo:
             // A. Load Data
-            // B. Decrease the dataset
-            // C. Find valid words in dataset
 
-            // A1. Load anagram data
+            // A1. Show loaded anagram data
+            _injectedAnagramContainer = anagramContainer;
             ConsoleWriteLine("A1_LoadAnagram()");
             ConsoleWriteLine(" This is the input anagram: '" + _injectedAnagramContainer.Anagram.RawData + "'");
             ConsoleWriteLine(" These distinct letters does the anagram contain: '" + _injectedAnagramContainer.Anagram.DistinctDataWithoutSpaceAsString + "'");
             ConsoleWriteLine(" As above, but sorted: '" + _injectedAnagramContainer.Anagram.DistinctDataWithoutSpaceSortedAsString + "' - also called TableHeader");
             Console.WriteLine("");
 
-            // A2. Load wordlistdata
+            // A2. Show loaded wordlistdata
+            _injectedWordlistContainer = wordlistContainer;
             ConsoleWriteLine("A2_LoadWordlist()");
             ConsoleWriteLine(" The unfiltered input wordlist contains " + _injectedWordlistContainer.ListUnfiltered0_Wordlist.Count + " lines");
             Console.WriteLine("");
+        }
 
+        public void Main(string[] args)
+        {
             // B1. Decrease anagram the dataset
             ConsoleWriteLine("B1_ReduceTheAnagramDataset()");
             B1_ReduceTheAnagramDataset(_injectedAnagramContainer);
@@ -73,7 +65,6 @@ namespace anagramsolver
 
             using (MD5 md5HashComputer = MD5.Create())
             {
-
                 // D. Find valid combinations with 2 words
                 ConsoleWriteLine("D1_FindValidCombinations()");
                 D1_FindValidCombinations(md5HashComputer, longestWord, _injectedAnagramContainer, _injectedWordlistContainer);
