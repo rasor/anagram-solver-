@@ -5,6 +5,7 @@ using anagramsolver.containers;
 using anagramsolver.models;
 using anagramsolver.helpers;
 using System.Linq;
+using System.Diagnostics;
 
 namespace anagramsolverTests
 {
@@ -29,7 +30,9 @@ namespace anagramsolverTests
             _LoopSetsBase = new LoopSetsBase(Dummy, MD5.Create(), anagramCtrl, wordlistCtrl);
         }
 
-        private void Dummy(string input) { }
+        private void Dummy(string input) {
+            Debug.WriteLine(input);
+        }
 
         private static string[] CreateListOfWordPermutationsReplacementStrings()
         {
@@ -46,7 +49,7 @@ namespace anagramsolverTests
         {
             int noOfJackpots = 0;
             var words = new string[] { "yawls", "stout", "printout" };
-            string[] listOfWordPermutationsReplacementStrings = CreateListOfWordPermutationsReplacementStrings();
+            string[] listOfWordPermutationsReplacementStrings = new string[] { "{2} {0} {1}", "{2} {1} {0}" };
 
             // Expect words to match one of the md5Hashes
             bool expected = true;
@@ -56,6 +59,20 @@ namespace anagramsolverTests
             // Other order should also succeed
             words = new string[] { "stout", "yawls", "printout" };
             actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void GivenWords_WhenWordsCorrect_ButPermutationListIsWrong_ShouldReturnFalse()
+        {
+            int noOfJackpots = 0;
+            var words = new string[] { "yawls", "stout", "printout" };
+            // Though words are correct then the selected permutations won't put sentence in right order
+            string[] listOfWordPermutationsReplacementStrings = new string[] { "{0} {1} {2}", "{0} {2} {1}" };
+
+            // Expect fail, when words are not put in right order
+            bool expected = false;
+            bool actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
         }
 
