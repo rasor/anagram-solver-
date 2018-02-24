@@ -1,5 +1,6 @@
 ﻿using anagramsolver.helpers;
 using anagramsolver.models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 
@@ -26,12 +27,16 @@ namespace anagramsolver.containers
         private int[] _anagramRow;
         public int[] AnagramRow { get { return _anagramRow; } }
 
+        public AnagramContainer(IConfigurationRoot config)
+            : this(
+                  new StringBox(config["AppSettings:Anagram"]),
+                  new string[] {config["AppSettings:Md5Hashes:0"], config["AppSettings:Md5Hashes:1"], config["AppSettings:Md5Hashes:2"]})
+        {}
         public AnagramContainer(StringBox anagram, string[] md5Hashes)
         {
             _anagram = anagram;
             _md5Hashes = md5Hashes;
         }
-
 
         /// <summary>
         /// Find all letters that are not in the anagram

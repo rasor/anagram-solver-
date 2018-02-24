@@ -14,9 +14,10 @@ namespace anagramsolver
         private static string[] _configMd5Hashes;
         private static string _configWordlistPath;
 
+        private static IAnagramContainer _injectedAnagramContainer;
         private static IWordlistContainer _injectedWordlistContainer;
 
-        public ProgramTransactionScript(IConfigurationRoot config, IWordlistContainer wordlistContainer)
+        public ProgramTransactionScript(IConfigurationRoot config, IAnagramContainer anagramContainer, IWordlistContainer wordlistContainer)
         {
             // Input data
             _configAnagram = config["AppSettings:Anagram"];
@@ -24,6 +25,7 @@ namespace anagramsolver
             { config["AppSettings:Md5Hashes:0"], config["AppSettings:Md5Hashes:1"], config["AppSettings:Md5Hashes:2"] };
             _configWordlistPath = config["AppSettings:WordlistPath"];
 
+            _injectedAnagramContainer = anagramContainer;
             _injectedWordlistContainer = wordlistContainer;
         }
 
@@ -39,7 +41,9 @@ namespace anagramsolver
 
             // A1. Load anagram data
             ConsoleWriteLine("A1_LoadAnagram()");
-            var anagramCtrl = A1_LoadAnagram();
+            ConsoleWriteLine(" This is the input anagram: '" + _injectedAnagramContainer.Anagram.RawData + "'");
+            ConsoleWriteLine(" These distinct letters does the anagram contain: '" + _injectedAnagramContainer.Anagram.DistinctDataWithoutSpaceAsString + "'");
+            ConsoleWriteLine(" As above, but sorted: '" + _injectedAnagramContainer.Anagram.DistinctDataWithoutSpaceSortedAsString + "' - also called TableHeader");
             Console.WriteLine("");
 
             // A2. Load wordlistdata
@@ -49,22 +53,22 @@ namespace anagramsolver
 
             // B1. Decrease anagram the dataset
             ConsoleWriteLine("B1_ReduceTheAnagramDataset()");
-            B1_ReduceTheAnagramDataset(anagramCtrl);
+            B1_ReduceTheAnagramDataset(_injectedAnagramContainer);
             Console.WriteLine("");
 
             // B2. Reduce wordlist the dataset
             ConsoleWriteLine("B2_ReduceTheWordlistDataset()");
-            B2_ReduceTheWordlistDataset(anagramCtrl, _injectedWordlistContainer);
+            B2_ReduceTheWordlistDataset(_injectedAnagramContainer, _injectedWordlistContainer);
             Console.WriteLine("");
 
             // C1. Find valid words in dataset being subset of anagram
             ConsoleWriteLine("C1_FindValidWordsInDataset()");
-            C1_FindValidWordsInDataset(anagramCtrl, _injectedWordlistContainer);
+            C1_FindValidWordsInDataset(_injectedAnagramContainer, _injectedWordlistContainer);
             Console.WriteLine("");
 
             // C2. Order Words In Dataset By Lenght
             ConsoleWriteLine("C2_OrderWordsInDatasetByLenght()");
-            var longestWord = C2_OrderWordsInDatasetByLenght(anagramCtrl, _injectedWordlistContainer);
+            var longestWord = C2_OrderWordsInDatasetByLenght(_injectedAnagramContainer, _injectedWordlistContainer);
             Console.WriteLine("");
 
             using (MD5 md5HashComputer = MD5.Create())
@@ -72,24 +76,12 @@ namespace anagramsolver
 
                 // D. Find valid combinations with 2 words
                 ConsoleWriteLine("D1_FindValidCombinations()");
-                D1_FindValidCombinations(md5HashComputer, longestWord, anagramCtrl, _injectedWordlistContainer);
+                D1_FindValidCombinations(md5HashComputer, longestWord, _injectedAnagramContainer, _injectedWordlistContainer);
                 Console.WriteLine("");
             }
 
             ConsoleWriteLine("Done AnagramSolver! - Press any key");
             Console.ReadKey();
-        }
-
-        static IAnagramContainer A1_LoadAnagram()
-        {
-            // Put data in a model, where it can be represented in various ways
-            var anagram = new StringBox(_configAnagram);
-            // Put data in a controller that can manage it
-            var anagramCtrl = new AnagramContainer(anagram, _configMd5Hashes);
-            ConsoleWriteLine(" This is the input anagram: '" + anagramCtrl.Anagram.RawData + "'");
-            ConsoleWriteLine(" These distinct letters does the anagram contain: '" + anagramCtrl.Anagram.DistinctDataWithoutSpaceAsString + "'");
-            ConsoleWriteLine(" As above, but sorted: '" + anagramCtrl.Anagram.DistinctDataWithoutSpaceSortedAsString + "' - also called TableHeader");
-            return anagramCtrl;
         }
 
         static void B1_ReduceTheAnagramDataset(IAnagramContainer AnagramCtrl)

@@ -30,6 +30,7 @@ namespace anagramsolver
             services.AddSingleton<IConfigurationRoot>(Configuration);
 
             // Add Main() dependencies
+            services.AddSingleton<IAnagramContainer, AnagramContainer>();
             services.AddSingleton<IWordlistContainer, WordlistContainer>();
 
             // Main() is moved to ProgramTransactionScript, so the Program.cs is only used for setting up DI
