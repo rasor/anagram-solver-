@@ -39,11 +39,8 @@ namespace anagramsolver.helpers
 
         private int Loop5WordCombinationsInCurrentSet(CurrentSetOf5Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
-            // List from [0,1,2,3,4] to [4,3,2,1,0] = 120 permutations - used for swapping order of words in sentence
-            int[] permutationValues = new int[] { 0, 1, 2, 3, 4 };
-            var listOfWordPermutations = PermutationsCreator.GetPermutations(permutationValues, permutationValues.Length);
-            // Convert to a list for string.Format: "{0} {1} {2} {3} {4}"
-            var listOfWordPermutationsReplacementString = PermutationsCreator.ToReplacementString(listOfWordPermutations).ToArray(); ;
+            // Create list with permutations for string.Format: "{0} {1} {2} {3} {4}" from [0,1,2,3,4] to [4,3,2,1,0] = 120 permutations
+            string[] listOfWordPermutationsReplacementString = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(5);
 
             int numberOfJackpots = 0;
 

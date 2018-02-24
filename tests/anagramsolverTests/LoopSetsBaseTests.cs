@@ -34,16 +34,6 @@ namespace anagramsolverTests
             Debug.WriteLine(input);
         }
 
-        private static string[] CreateListOfWordPermutationsReplacementStrings()
-        {
-            // List from [0,1,2] to [2,1,0] = 6 permutations - used for swapping order of words in sentence
-            int[] permutationValues = new int[] { 0, 1, 2 };
-            var listOfWordPermutations = PermutationsCreator.GetPermutations(permutationValues, permutationValues.Length);
-            // Convert to a list for string.Format: "{0} {1} {2}"
-            var listOfWordPermutationsReplacementString = PermutationsCreator.ToReplacementString(listOfWordPermutations).ToArray(); ;
-            return listOfWordPermutationsReplacementString;
-        }
-
         [Fact]
         public void GivenWords_WhenWordsCorrect_ShouldReturnTrue()
         {
@@ -58,6 +48,11 @@ namespace anagramsolverTests
 
             // Other order should also succeed
             words = new string[] { "stout", "yawls", "printout" };
+            actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            Assert.Equal(expected, actual);
+
+            // It should also work with auto-created permutations
+            listOfWordPermutationsReplacementStrings = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(3);
             actual = _LoopSetsBase.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
         }
@@ -81,7 +76,8 @@ namespace anagramsolverTests
         {
             int noOfJackpots = 0;
             var words = new string[] { "pawls", "stout", "printout" };
-            string[] listOfWordPermutationsReplacementStrings = CreateListOfWordPermutationsReplacementStrings();
+            // Create list with permutations for string.Format: "{0} {1} {2}" from [0,1,2] to [2,1,0] = 6 permutations
+            string[] listOfWordPermutationsReplacementStrings = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(3);
 
             // Expect words not to match one of the md5Hashes
             bool expected = false;

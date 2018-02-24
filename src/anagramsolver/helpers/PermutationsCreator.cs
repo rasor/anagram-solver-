@@ -55,5 +55,26 @@ namespace anagramsolver.helpers
             var permutationsList = listOfPermutations.Select(wordPos => "{" + string.Join("} {", wordPos) + "}");
             return permutationsList;
         }
+
+        /// <summary>
+        /// Create list with permutations for string.Format: "{0} {1} {2}"
+        /// </summary>
+        /// <param name="numberOfWordsInSentence">Number of words that should be replaced in string.Format</param>
+        /// <returns>A list with a line foreach permutation</returns>
+        public static string[] CreateListOfWordPermutationsReplacementStrings(int numberOfWordsInSentence)
+        {
+            int[] permutationValues = new int[numberOfWordsInSentence];
+            for (int i = 0; i < numberOfWordsInSentence; i++)
+            {
+                permutationValues[i] = i;
+            }
+
+            // List from [0,1,2] to [2,1,0] = 6 permutations - used for swapping order of words in sentence
+            //int[] permutationValues = new int[] { 0, 1, 2 };
+            var listOfWordPermutations = PermutationsCreator.GetPermutations(permutationValues, permutationValues.Length);
+            // Convert to a list for string.Format: "{0} {1} {2}"
+            var listOfWordPermutationsReplacementStrings = PermutationsCreator.ToReplacementString(listOfWordPermutations).ToArray(); ;
+            return listOfWordPermutationsReplacementStrings;
+        }
     }
 }

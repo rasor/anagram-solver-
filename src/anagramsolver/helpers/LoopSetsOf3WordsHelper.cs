@@ -39,7 +39,8 @@ namespace anagramsolver.helpers
 
         private int Loop3WordCombinationsInCurrentSet(CurrentSetOf3Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
-            string[] listOfWordPermutationsReplacementString = CreateListOfWordPermutationsReplacementStrings();
+            // Create list with permutations for string.Format: "{0} {1} {2}" from [0,1,2] to [2,1,0] = 6 permutations
+            string[] listOfWordPermutationsReplacementString = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(3);
 
             int numberOfJackpots = 0;
 
@@ -112,16 +113,6 @@ namespace anagramsolver.helpers
                 _consoleWriteLine("  UniqueListOfSentencesHavingWordsWithSameLength: " + uniqueListOfSentencesHavingWordsWithSameLengthCounter + ". SkippedChecks: " + skippedChecksCounter);
             }
             return numberOfJackpots;
-        }
-
-        private static string[] CreateListOfWordPermutationsReplacementStrings()
-        {
-            // List from [0,1,2] to [2,1,0] = 6 permutations - used for swapping order of words in sentence
-            int[] permutationValues = new int[] { 0, 1, 2 };
-            var listOfWordPermutations = PermutationsCreator.GetPermutations(permutationValues, permutationValues.Length);
-            // Convert to a list for string.Format: "{0} {1} {2}"
-            var listOfWordPermutationsReplacementString = PermutationsCreator.ToReplacementString(listOfWordPermutations).ToArray(); ;
-            return listOfWordPermutationsReplacementString;
         }
     }
 }
