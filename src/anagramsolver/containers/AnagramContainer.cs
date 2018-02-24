@@ -8,7 +8,7 @@ namespace anagramsolver.containers
     /// <summary>
     /// Container for the input anagram and some calculated representations of it
     /// </summary>
-    public class AnagramContainer
+    public class AnagramContainer : IAnagramContainer
     {
         // The 3 input hashes
         private string[] _md5Hashes;
@@ -72,7 +72,7 @@ namespace anagramsolver.containers
             _anagramRow = hlpr.FillRowFromWord(tableHeaderOfAnagramSorted, col0, col1, col2, word);
         }
 
-        internal bool IsSubset(int[] row)
+        public bool IsSubset(int[] row)
         {
             bool isSubset = true;
             // Word is stored from col3 onwards - loop it

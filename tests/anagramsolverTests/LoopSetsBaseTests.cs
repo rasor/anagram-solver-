@@ -11,7 +11,6 @@ namespace anagramsolverTests
     public class LoopSetsBaseTests
     {
         // Input data
-        const string ANAGRAM = "poultry outwits ants";
         static readonly string[] md5Hashes =
             { "e4820b45d2277f3844eac66c903e84be", "23170acc097c24edb98fc5488ab033fe", "665e5bcb0c20062fe8abaaf4628bb154" };
 
@@ -22,19 +21,22 @@ namespace anagramsolverTests
 
         public LoopSetsBaseTests()
         {
-            // Put data in a model, where it can be represented in various ways
-            var anagram = new StringBox(ANAGRAM);
-            // Put data in a controller that can manage it
-            var anagramCtrl = new AnagramContainer(anagram, md5Hashes);
+            // Create mocks and SUT
             // https://github.com/Moq/moq4/wiki/Quickstart
+
+            // Mocking AnagramContainer with md5Hashes
+            var anagramCtrlMocker = new Mock<IAnagramContainer>();
+            anagramCtrlMocker.Setup(foo => foo.Md5Hashes).Returns(() => md5Hashes);
+            var anagramCtrlMock = anagramCtrlMocker.Object;
+
             // Mocking WordlistContainer with a total empty behavior - we don't need it
             var wordlistCtrlMocker = new Mock<IWordlistContainer>();
             var wordlistCtrlMock = wordlistCtrlMocker.Object;
 
-            _Sut = new LoopSetsBase(Dummy, MD5.Create(), anagramCtrl, wordlistCtrlMock);
+            _Sut = new LoopSetsBase(DummyPrinter, MD5.Create(), anagramCtrlMock, wordlistCtrlMock);
         }
 
-        private void Dummy(string input) {
+        private void DummyPrinter(string input) {
             Debug.WriteLine(input);
         }
 

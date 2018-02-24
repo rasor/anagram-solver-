@@ -12,12 +12,12 @@ namespace anagramsolver.helpers
         protected MD5 _md5HashComputer;
         protected Md5Helper _md5Hlpr;
 
-        protected AnagramContainer _anagramCtrl;
+        protected IAnagramContainer _anagramCtrl;
         protected IWordlistContainer _wordlistCtrl;
         protected List<List<int>> _tableByWordLength;
 
         public LoopSetsBase(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
-            AnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
+            IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
         {
             _consoleWriteLine = ConsoleWriteLine;
             _md5HashComputer = Md5HashComputer;
