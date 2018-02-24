@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace anagramsolver.helpers
 {
-    static class PermutationsCreator
+    public static class PermutationsCreator
     {
         /// <summary>
         /// https://www.mathsisfun.com/combinatorics/combinations-permutations.html

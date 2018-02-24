@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 namespace anagramsolver.helpers
 {
-    public abstract class LoopSetsBase
+    public class LoopSetsBase
     {
         protected Action<string> _consoleWriteLine;
         protected MD5 _md5HashComputer;
@@ -55,7 +55,7 @@ namespace anagramsolver.helpers
         /// <param name="words"></param>
         /// <param name="listOfWordPermutationsReplacementString"></param>
         /// <returns></returns>
-        protected bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string[] words, string[] listOfWordPermutationsReplacementString)
+        public bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string[] words, string[] listOfWordPermutationsReplacementString)
         {
             bool gotJackpot = false;
             // did we get lucky? - loop permutations of the words in the sentence

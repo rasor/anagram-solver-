@@ -17,4 +17,10 @@
     <ProjectReference Include="..\..\src\anagramsolver\anagramsolver.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="resources\smallwordlist.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
