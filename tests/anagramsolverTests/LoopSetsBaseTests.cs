@@ -1,4 +1,5 @@
 ﻿using Xunit;
+using Moq;
 using anagramsolver.helpers;
 using System.Security.Cryptography;
 using anagramsolver.containers;
@@ -11,7 +12,6 @@ namespace anagramsolverTests
     {
         // Input data
         const string ANAGRAM = "poultry outwits ants";
-        const string WORDLISTPATH = @".\resources\smallwordlist.txt";
         static readonly string[] md5Hashes =
             { "e4820b45d2277f3844eac66c903e84be", "23170acc097c24edb98fc5488ab033fe", "665e5bcb0c20062fe8abaaf4628bb154" };
 
@@ -26,9 +26,12 @@ namespace anagramsolverTests
             var anagram = new StringBox(ANAGRAM);
             // Put data in a controller that can manage it
             var anagramCtrl = new AnagramContainer(anagram, md5Hashes);
-            var wordlistCtrl = new WordlistContainer(WORDLISTPATH);
+            // https://github.com/Moq/moq4/wiki/Quickstart
+            // Mocking WordlistContainer with a total empty behavior - we don't need it
+            var wordlistCtrlMocker = new Mock<IWordlistContainer>();
+            var wordlistCtrlMock = wordlistCtrlMocker.Object;
 
-            _Sut = new LoopSetsBase(Dummy, MD5.Create(), anagramCtrl, wordlistCtrl);
+            _Sut = new LoopSetsBase(Dummy, MD5.Create(), anagramCtrl, wordlistCtrlMock);
         }
 
         private void Dummy(string input) {

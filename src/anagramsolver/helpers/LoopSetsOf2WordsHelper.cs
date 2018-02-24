@@ -10,7 +10,7 @@ namespace anagramsolver.helpers
     public class LoopSetsOf2WordsHelper: LoopSetsBase
     {
         public LoopSetsOf2WordsHelper(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
-            AnagramContainer AnagramCtrl, WordlistContainer WordlistCtrl) : 
+            AnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl) : 
             base(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
         { }
 

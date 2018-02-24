@@ -11,7 +11,7 @@ namespace anagramsolver.containers
     /// <summary>
     /// Container for the input wordlist and some list and tables created from it
     /// </summary>
-    public class WordlistContainer
+    public class WordlistContainer : IWordlistContainer
     {
         // Orginal list
         private List<string> _listUnfiltered0_Wordlist;
