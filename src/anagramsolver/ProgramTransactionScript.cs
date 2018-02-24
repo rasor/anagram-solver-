@@ -4,16 +4,24 @@ using anagramsolver.models;
 using System.Linq;
 using System.Security.Cryptography;
 using anagramsolver.helpers;
+using Microsoft.Extensions.Configuration;
 
 namespace anagramsolver
 {
     public class ProgramTransactionScript
     {
-        // Input data
-        const string ANAGRAM = "poultry outwits ants";
-        const string WORDLISTPATH = @".\resources\wordlist.txt";
-        static readonly string[] md5Hashes =
-            { "e4820b45d2277f3844eac66c903e84be", "23170acc097c24edb98fc5488ab033fe", "665e5bcb0c20062fe8abaaf4628bb154" };
+        static string _configAnagram;
+        static string[] _configMd5Hashes;
+        static string _configWordlistPath;
+
+        public ProgramTransactionScript(IConfigurationRoot config)
+        {
+            // Input data
+            _configAnagram = config["AppSettings:Anagram"];
+            _configMd5Hashes = new string[] 
+            { config["AppSettings:Md5Hashes:0"], config["AppSettings:Md5Hashes:1"], config["AppSettings:Md5Hashes:2"] };
+            _configWordlistPath = config["AppSettings:WordlistPath"];
+        }
 
         public void Main(string[] args)
         {
@@ -71,9 +79,9 @@ namespace anagramsolver
         static AnagramContainer A1_LoadAnagram()
         {
             // Put data in a model, where it can be represented in various ways
-            var anagram = new StringBox(ANAGRAM);
+            var anagram = new StringBox(_configAnagram);
             // Put data in a controller that can manage it
-            var anagramCtrl = new AnagramContainer(anagram, md5Hashes);
+            var anagramCtrl = new AnagramContainer(anagram, _configMd5Hashes);
             ConsoleWriteLine(" This is the input anagram: '" + anagramCtrl.Anagram.RawData + "'");
             ConsoleWriteLine(" These distinct letters does the anagram contain: '" + anagramCtrl.Anagram.DistinctDataWithoutSpaceAsString + "'");
             ConsoleWriteLine(" As above, but sorted: '" + anagramCtrl.Anagram.DistinctDataWithoutSpaceSortedAsString + "' - also called TableHeader");
@@ -82,7 +90,7 @@ namespace anagramsolver
 
         static WordlistContainer A2_LoadWordlist()
         {
-            var wordlistCtrl = new WordlistContainer(WORDLISTPATH);
+            var wordlistCtrl = new WordlistContainer(_configWordlistPath);
             ConsoleWriteLine(" The unfiltered input wordlist contains " + wordlistCtrl.ListUnfiltered0_Wordlist.Count + " lines");
             return wordlistCtrl;
         }
