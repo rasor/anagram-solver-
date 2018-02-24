@@ -21,8 +21,8 @@ namespace anagramsolver.containers
         private Dictionary<string, int> _listFilter1_WorddictHavingAllowedChars;
         public Dictionary<string, int> ListFilter1_WorddictHavingAllowedChars { get { return _listFilter1_WorddictHavingAllowedChars; } }
 
-        private string[] _listFilter1_WordArrayHavingAllowedChars;
-        public string[] ListFilter1_WordArrayHavingAllowedChars { get { return _listFilter1_WordArrayHavingAllowedChars; } }
+        //private string[] _listFilter1_WordArrayHavingAllowedChars;
+        //public string[] ListFilter1_WordArrayHavingAllowedChars { get { return _listFilter1_WordArrayHavingAllowedChars; } }
 
         private int[][] _tableFilter2_WordMatrix;
         public int[][] TableFilter2_WordMatrix { get { return _tableFilter2_WordMatrix; } }
@@ -65,8 +65,8 @@ namespace anagramsolver.containers
                 }
             });
 
-            // Save as array for fast lookup by index
-            _listFilter1_WordArrayHavingAllowedChars = _listFilter1_WorddictHavingAllowedChars.Keys.ToArray();
+            // Save as array for fast lookup by index - Droppet - this was slower than the dict
+            //_listFilter1_WordArrayHavingAllowedChars = _listFilter1_WorddictHavingAllowedChars.Keys.ToArray();
         }
 
         /// <summary>
