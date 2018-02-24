@@ -1,8 +1,10 @@
 ﻿using anagramsolver.containers;
+using anagramsolver.services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace anagramsolver
@@ -30,8 +32,11 @@ namespace anagramsolver
             services.AddSingleton<IConfigurationRoot>(Configuration);
 
             // Add Main() dependencies
+            services.AddTransient<ConsoleLogger, ConsoleLogger>();
             services.AddSingleton<IAnagramContainer, AnagramContainer>();
             services.AddSingleton<IWordlistContainer, WordlistContainer>();
+            //services.AddSingleton(MD5.Create());
+            //services.AddTransient<Md5Helper, Md5Helper>();
 
             // Main() is moved to ProgramTransactionScript, so the Program.cs is only used for setting up DI
             services.AddSingleton<ProgramTransactionScript, ProgramTransactionScript>();

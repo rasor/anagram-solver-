@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Security.Cryptography;
+using anagramsolver.containers;
 
 namespace anagramsolver.services
 {
@@ -12,6 +13,9 @@ namespace anagramsolver.services
         private MD5 _md5HashComputer;
         private string[] _md5Hashes;
 
+        public Md5Helper(MD5 Md5HashComputer, IAnagramContainer anagramContainer)
+            :this(Md5HashComputer, anagramContainer.Md5Hashes)
+        {}
         public Md5Helper(MD5 Md5HashComputer, string[] Md5Hashes)
         {
             _md5HashComputer = Md5HashComputer;
