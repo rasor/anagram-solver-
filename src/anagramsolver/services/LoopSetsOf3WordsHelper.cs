@@ -9,9 +9,9 @@ namespace anagramsolver.services
 {
     public class LoopSetsOf3WordsHelper: LoopSetsBase
     {
-        public LoopSetsOf3WordsHelper(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
+        public LoopSetsOf3WordsHelper(ConsoleLogger logger, MD5 Md5HashComputer,
             IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl) :
-            base(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
+            base(logger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
         { }
 
         public int LoopSetsOf3WordsDoValidateAndCheckMd5(int numberOfJackpots)
@@ -44,9 +44,10 @@ namespace anagramsolver.services
 
             int numberOfJackpots = 0;
 
-            var listOfPointersToWord3 = _tableByWordLength[currentSetLength.Word3Length];
-            var listOfPointersToWord2 = _tableByWordLength[currentSetLength.Word2Length];
-            var listOfPointersToWord1 = _tableByWordLength[currentSetLength.Word1Length];
+            var tableByWordLength = _wordlistCtrl.TableByWordLength;
+            var listOfPointersToWord3 = tableByWordLength[currentSetLength.Word3Length];
+            var listOfPointersToWord2 = tableByWordLength[currentSetLength.Word2Length];
+            var listOfPointersToWord1 = tableByWordLength[currentSetLength.Word1Length];
 
             ulong currentSetCombinations = (ulong)(listOfPointersToWord1.Count * listOfPointersToWord2.Count * listOfPointersToWord3.Count);
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString() + " having " + currentSetCombinations + " combinations");

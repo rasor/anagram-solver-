@@ -14,7 +14,6 @@ namespace anagramsolver.services
 
         protected IAnagramContainer _anagramCtrl;
         protected IWordlistContainer _wordlistCtrl;
-        protected List<List<int>> _tableByWordLength;
 
         public LoopSetsBase(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
             IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
@@ -23,7 +22,6 @@ namespace anagramsolver.services
             _md5HashComputer = Md5HashComputer;
             _anagramCtrl = AnagramCtrl;
             _wordlistCtrl = WordlistCtrl;
-            _tableByWordLength = _wordlistCtrl.TableByWordLength;
             _md5Hlpr = new Md5Helper(_md5HashComputer, _anagramCtrl.Md5Hashes);
         }
 

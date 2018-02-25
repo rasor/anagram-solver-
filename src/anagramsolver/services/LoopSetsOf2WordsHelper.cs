@@ -9,9 +9,9 @@ namespace anagramsolver.services
 {
     public class LoopSetsOf2WordsHelper: LoopSetsBase
     {
-        public LoopSetsOf2WordsHelper(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
+        public LoopSetsOf2WordsHelper(ConsoleLogger logger, MD5 Md5HashComputer,
             IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl) : 
-            base(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
+            base(logger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
         { }
 
         /// <summary>
@@ -57,8 +57,9 @@ namespace anagramsolver.services
 
             int numberOfJackpots = 0;
 
-            var listOfPointersToWord2 =  _tableByWordLength[currentSetLength.Word2Length];
-            var listOfPointersToWord1 = _tableByWordLength[currentSetLength.Word1Length];
+            var tableByWordLength = _wordlistCtrl.TableByWordLength;
+            var listOfPointersToWord2 =  tableByWordLength[currentSetLength.Word2Length];
+            var listOfPointersToWord1 = tableByWordLength[currentSetLength.Word1Length];
 
             ulong currentSetCombinations = (ulong)(listOfPointersToWord1.Count * listOfPointersToWord2.Count);
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString() + " having " + currentSetCombinations + " combinations");

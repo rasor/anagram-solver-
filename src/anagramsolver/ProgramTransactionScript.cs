@@ -13,6 +13,10 @@ namespace anagramsolver
         private static IAnagramContainer _injectedAnagramContainer;
         private static IWordlistContainer _injectedWordlistContainer;
         private static ConsoleLogger _injectedLogger;
+        private static LoopSetsOf2WordsHelper _injectedSetsOf2WordsLooper;
+        private static LoopSetsOf3WordsHelper _injectedSetsOf3WordsLooper;
+        private static LoopSetsOf4WordsHelper _injectedSetsOf4WordsLooper;
+        private static LoopSetsOf5WordsHelper _injectedSetsOf5WordsLooper;
 
         // Pseudo:
         // A. Load Data
@@ -20,7 +24,9 @@ namespace anagramsolver
         // C. Find valid words in dataset
 
         public ProgramTransactionScript(IConfigurationRoot config, ConsoleLogger logger,
-            IAnagramContainer anagramContainer, IWordlistContainer wordlistContainer)
+            IAnagramContainer anagramContainer, IWordlistContainer wordlistContainer,
+            LoopSetsOf2WordsHelper setsOf2WordsLooper, LoopSetsOf3WordsHelper setsOf3WordsLooper,
+            LoopSetsOf4WordsHelper setsOf4WordsLooper, LoopSetsOf5WordsHelper setsOf5WordsLooper)
         {
             _injectedLogger = logger;
             Console.WriteLine("Hello from AnagramSolver!");
@@ -41,6 +47,11 @@ namespace anagramsolver
             _injectedLogger.ConsoleWriteLine("A2_LoadWordlist()");
             _injectedLogger.ConsoleWriteLine(" The unfiltered input wordlist contains " + _injectedWordlistContainer.ListUnfiltered0_Wordlist.Count + " lines");
             Console.WriteLine("");
+
+            _injectedSetsOf2WordsLooper = setsOf2WordsLooper;
+            _injectedSetsOf3WordsLooper = setsOf3WordsLooper;
+            _injectedSetsOf4WordsLooper = setsOf4WordsLooper;
+            _injectedSetsOf5WordsLooper = setsOf5WordsLooper;
         }
 
         public void Main(string[] args)
@@ -65,13 +76,10 @@ namespace anagramsolver
             var longestWord = C2_OrderWordsInDatasetByLenght(_injectedAnagramContainer, _injectedWordlistContainer);
             Console.WriteLine("");
 
-            using (MD5 md5HashComputer = MD5.Create())
-            {
-                // D. Find valid combinations with 2 words
-                _injectedLogger.ConsoleWriteLine("D1_FindValidCombinations()");
-                D1_FindValidCombinations(md5HashComputer, longestWord, _injectedAnagramContainer, _injectedWordlistContainer);
-                Console.WriteLine("");
-            }
+            // D. Find valid combinations with 2 words
+            _injectedLogger.ConsoleWriteLine("D1_FindValidCombinations()");
+            D1_FindValidCombinations();
+            Console.WriteLine("");
 
             _injectedLogger.ConsoleWriteLine("Done AnagramSolver! - Press any key");
             Console.ReadKey();
@@ -128,11 +136,7 @@ namespace anagramsolver
         /// Loop through combinations
         /// https://www.mathsisfun.com/combinatorics/combinations-permutations.html
         /// </summary>
-        /// <param name="Md5HashComputer"></param>
-        /// <param name="longestWord"></param>
-        /// <param name="AnagramCtrl"></param>
-        /// <param name="WordlistCtrl"></param>
-        static void D1_FindValidCombinations(MD5 Md5HashComputer, int longestWord, IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
+        static void D1_FindValidCombinations()
         {
             // Create permutationsets-loop-algoritm.
             // In the loop do
@@ -146,23 +150,19 @@ namespace anagramsolver
 
             int numberOfJackpots = 0;
             // D1A LoopSetsOf2Words
-            var looper2 = new LoopSetsOf2WordsHelper(_injectedLogger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
-            //numberOfJackpots = looper2.LoopSetsOf2WordsDoValidateAndCheckMd5();
+            numberOfJackpots = _injectedSetsOf2WordsLooper.LoopSetsOf2WordsDoValidateAndCheckMd5();
             Console.WriteLine("");
 
             // D1B LoopSetsOf3Words
-            var looper3 = new LoopSetsOf3WordsHelper(_injectedLogger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
-            numberOfJackpots = looper3.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots);
+            numberOfJackpots = _injectedSetsOf3WordsLooper.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots);
             Console.WriteLine("");
 
             // D1C LoopSetsOf4Words
-            var looper4 = new LoopSetsOf4WordsHelper(_injectedLogger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
-            //numberOfJackpots = looper4.LoopSetsOf4WordsDoValidateAndCheckMd5(numberOfJackpots);
+            numberOfJackpots = _injectedSetsOf4WordsLooper.LoopSetsOf4WordsDoValidateAndCheckMd5(numberOfJackpots);
             Console.WriteLine("");
 
             // D1C LoopSetsOf5Words
-            var looper5 = new LoopSetsOf5WordsHelper(_injectedLogger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl);
-            //numberOfJackpots = looper5.LoopSetsOf5WordsDoValidateAndCheckMd5(numberOfJackpots);
+            numberOfJackpots = _injectedSetsOf5WordsLooper.LoopSetsOf5WordsDoValidateAndCheckMd5(numberOfJackpots);
             Console.WriteLine("");
         }
 

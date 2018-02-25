@@ -9,9 +9,9 @@ namespace anagramsolver.services
 {
     public class LoopSetsOf5WordsHelper: LoopSetsBase
     {
-        public LoopSetsOf5WordsHelper(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
+        public LoopSetsOf5WordsHelper(ConsoleLogger logger, MD5 Md5HashComputer,
             IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl) :
-            base(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
+            base(logger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
         { }
 
         public int LoopSetsOf5WordsDoValidateAndCheckMd5(int numberOfJackpots)
@@ -44,11 +44,12 @@ namespace anagramsolver.services
 
             int numberOfJackpots = 0;
 
-            var listOfPointersToWord5 = _tableByWordLength[currentSetLength.Word5Length];
-            var listOfPointersToWord4 = _tableByWordLength[currentSetLength.Word4Length];
-            var listOfPointersToWord3 = _tableByWordLength[currentSetLength.Word3Length];
-            var listOfPointersToWord2 = _tableByWordLength[currentSetLength.Word2Length];
-            var listOfPointersToWord1 = _tableByWordLength[currentSetLength.Word1Length];
+            var tableByWordLength = _wordlistCtrl.TableByWordLength;
+            var listOfPointersToWord5 = tableByWordLength[currentSetLength.Word5Length];
+            var listOfPointersToWord4 = tableByWordLength[currentSetLength.Word4Length];
+            var listOfPointersToWord3 = tableByWordLength[currentSetLength.Word3Length];
+            var listOfPointersToWord2 = tableByWordLength[currentSetLength.Word2Length];
+            var listOfPointersToWord1 = tableByWordLength[currentSetLength.Word1Length];
 
             ulong currentSetCombinations = (ulong)(listOfPointersToWord1.Count * listOfPointersToWord2.Count * listOfPointersToWord3.Count * listOfPointersToWord4.Count * listOfPointersToWord5.Count);
             _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString() + " having " + currentSetCombinations + " combinations");
