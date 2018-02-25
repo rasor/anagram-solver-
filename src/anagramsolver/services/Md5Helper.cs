@@ -2,6 +2,7 @@
 using System.Text;
 using System.Security.Cryptography;
 using anagramsolver.containers;
+using System.Collections.Generic;
 
 namespace anagramsolver.services
 {
@@ -25,11 +26,11 @@ namespace anagramsolver.services
         /// <summary>
         /// Check md5 against _md5Hashes.
         /// Remove hash from list if found
-        /// If nonhashes left in list return unset bool
+        /// If no hashes left in list return null
         /// </summary>
         /// <param name="input">string to check md5 on</param>
         /// <returns>Did string match any of the hashes?</returns>
-        public bool? VerifyMd5Hash(string input)
+        public bool? VerifyMd5HashRemoveHashIfFound(string input)
         {
             bool? result = null;
             if (_md5Hashes.Length > 0)
@@ -41,11 +42,16 @@ namespace anagramsolver.services
                 StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
                 // Check aginst each md5 string 
-                foreach (var md5HashToVerifyAgainst in _md5Hashes)
+                for (int i = 0; i < _md5Hashes.Length; i++)
                 {
-                    result = (0 == comparer.Compare(hashOfInput, md5HashToVerifyAgainst));
-                    if (true)
+                    result = (0 == comparer.Compare(hashOfInput, _md5Hashes[i]));
+                    if (result.HasValue && result.Value == true)
                     {
+                        // A correct sentence was found
+                        // Remove hash from list, so we won't have to check against it anymore
+                        var hashList= new List<string>(_md5Hashes);
+                        hashList.RemoveAt(i);
+                        _md5Hashes = hashList.ToArray();
                         break;
                     }
                 }

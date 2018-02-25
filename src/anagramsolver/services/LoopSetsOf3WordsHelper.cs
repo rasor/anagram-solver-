@@ -91,7 +91,7 @@ namespace anagramsolver.services
                                     uniqueListOfSentencesHavingWordsWithSameLengthCounter++;
                                     uniqueListOfSentencesHavingWordsWithSameLength.Add(currentSentence);
 
-                                    gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, currentSentence, listOfWordPermutationsReplacementString);
+                                    gotJackpot = FetchWordsAndCheckMd5RemoveFoundHash(ref numberOfJackpots, currentSentence, listOfWordPermutationsReplacementString);
                                 }
                                 else
                                 {
@@ -101,7 +101,7 @@ namespace anagramsolver.services
                             // No words of same lenght, so just do check
                             else
                             {
-                                gotJackpot = FetchWordsAndCheckMd5(ref numberOfJackpots, currentSentence, listOfWordPermutationsReplacementString);
+                                gotJackpot = FetchWordsAndCheckMd5RemoveFoundHash(ref numberOfJackpots, currentSentence, listOfWordPermutationsReplacementString);
                             }
                         }
                         combinationCounter++;

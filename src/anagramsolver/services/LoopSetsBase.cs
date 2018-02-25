@@ -33,7 +33,7 @@ namespace anagramsolver.services
         /// <param name="wordPointers"></param>
         /// <param name="listOfWordPermutationsReplacementString"></param>
         /// <returns></returns>
-        protected bool FetchWordsAndCheckMd5(ref int numberOfJackpots, int[] wordPointers, string[] listOfWordPermutationsReplacementString)
+        protected bool FetchWordsAndCheckMd5RemoveFoundHash(ref int numberOfJackpots, int[] wordPointers, string[] listOfWordPermutationsReplacementString)
         {
             var words = new string[wordPointers.Length];
             for (int i = 0; i < wordPointers.Length; i++)
@@ -41,7 +41,7 @@ namespace anagramsolver.services
                 words[i] = _wordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Keys.ElementAt(wordPointers[i]);
                 //words[i] = _wordlistCtrl.ListFilter1_WordArrayHavingAllowedChars[wordPointers[i]];
             }
-            bool gotJackpot = LoopPermutationsAndCheckMd5(ref numberOfJackpots, words, listOfWordPermutationsReplacementString);
+            bool gotJackpot = LoopPermutationsAndCheckMd5RemoveFoundHash(ref numberOfJackpots, words, listOfWordPermutationsReplacementString);
             return gotJackpot;
         }
 
@@ -53,7 +53,7 @@ namespace anagramsolver.services
         /// <param name="words"></param>
         /// <param name="listOfWordPermutationsReplacementString"></param>
         /// <returns></returns>
-        public bool LoopPermutationsAndCheckMd5(ref int numberOfJackpots, string[] words, string[] listOfWordPermutationsReplacementString)
+        public bool LoopPermutationsAndCheckMd5RemoveFoundHash(ref int numberOfJackpots, string[] words, string[] listOfWordPermutationsReplacementString)
         {
             bool gotJackpot = false;
             // did we get lucky? - loop permutations of the words in the sentence
@@ -61,10 +61,15 @@ namespace anagramsolver.services
             {
                 if (!gotJackpot)
                 {
-                    var gotJackpotTest = checkMd5(ref numberOfJackpots, string.Format(permutationReplacementString, words));
+                    var gotJackpotTest = checkMd5RemoveFoundHash(ref numberOfJackpots, string.Format(permutationReplacementString, words));
                     if (gotJackpotTest.HasValue)
                     {
                         gotJackpot = gotJackpotTest.Value;
+                        if (gotJackpot)
+                        {
+                            // Break if sentence was found
+                            break;
+                        }
                     }
                     else
                     {
@@ -81,9 +86,9 @@ namespace anagramsolver.services
             return gotJackpot;
         }
 
-        public bool? checkMd5(ref int numberOfJackpots, string sentenceToCheck)
+        public bool? checkMd5RemoveFoundHash(ref int numberOfJackpots, string sentenceToCheck)
         {
-            bool? gotJackpot = _md5Hlpr.VerifyMd5Hash(sentenceToCheck);
+            bool? gotJackpot = _md5Hlpr.VerifyMd5HashRemoveHashIfFound(sentenceToCheck);
             if (gotJackpot.HasValue && gotJackpot.Value)
             {
                 numberOfJackpots++;

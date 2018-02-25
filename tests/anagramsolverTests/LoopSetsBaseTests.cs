@@ -13,29 +13,26 @@ namespace anagramsolverTests
         /// <summary>
         /// System under test
         /// </summary>
-        private readonly LoopSetsBase _Sut0;
-        private readonly LoopSetsBase _Sut3;
+        //private readonly LoopSetsBase _Sut0;
+
+        // Mocking WordlistContainer with a total empty behavior - we don't need it
+        private Mock<IAnagramContainer> _anagramCtrlMocker3 = new Mock<IAnagramContainer>();
+        private Mock<IAnagramContainer> _anagramCtrlMocker0 = new Mock<IAnagramContainer>();
+        private Mock<IWordlistContainer> _wordlistCtrlMocker = new Mock<IWordlistContainer>();
 
         public LoopSetsBaseTests()
         {
             // Create mocks and SUT
             // https://github.com/Moq/moq4/wiki/Quickstart
 
-            // Mocking WordlistContainer with a total empty behavior - we don't need it
-            var wordlistCtrlMocker = new Mock<IWordlistContainer>();
-
             // Mocking AnagramContainer with md5Hashes
-            string[] md5Hashes3 =
+            string[] _md5Hashes3 =
                 { "e4820b45d2277f3844eac66c903e84be", "23170acc097c24edb98fc5488ab033fe", "665e5bcb0c20062fe8abaaf4628bb154" };
-            var anagramCtrlMocker3 = new Mock<IAnagramContainer>();
-            anagramCtrlMocker3.Setup(foo => foo.Md5Hashes).Returns(() => md5Hashes3);
-            _Sut3 = new LoopSetsBase(DummyPrinter, MD5.Create(), anagramCtrlMocker3.Object, wordlistCtrlMocker.Object);
+            _anagramCtrlMocker3.Setup(foo => foo.Md5Hashes).Returns(() => _md5Hashes3);
 
             // Mocking AnagramContainer with no md5Hashes left
             string[] md5Hashes0 = { };
-            var anagramCtrlMocker0 = new Mock<IAnagramContainer>();
-            anagramCtrlMocker0.Setup(foo => foo.Md5Hashes).Returns(() => md5Hashes0);
-            _Sut0 = new LoopSetsBase(DummyPrinter, MD5.Create(), anagramCtrlMocker0.Object, wordlistCtrlMocker.Object);
+            _anagramCtrlMocker0.Setup(foo => foo.Md5Hashes).Returns(() => md5Hashes0);
         }
 
         private void DummyPrinter(string input) {
@@ -43,30 +40,39 @@ namespace anagramsolverTests
         }
 
         [Fact]
-        public void GivenWords_WhenWordsCorrect_ShouldReturnTrue()
+        public void Given3Words_WhenWordsCorrect_ShouldReturnTrue()
         {
             int noOfJackpots = 0;
             var words = new string[] { "yawls", "stout", "printout" };
             string[] listOfWordPermutationsReplacementStrings = new string[] { "{2} {0} {1}", "{2} {1} {0}" };
 
+            var sut3 = new LoopSetsBase(DummyPrinter, MD5.Create(), _anagramCtrlMocker3.Object, _wordlistCtrlMocker.Object);
             // Expect words to match one of the md5Hashes
             bool expected = true;
-            bool actual = _Sut3.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            bool actual = sut3.LoopPermutationsAndCheckMd5RemoveFoundHash(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
 
-            // Other order should also succeed
+            // Other order should also succeed, but since the found hash was removed, then it can't find it twice
             words = new string[] { "stout", "yawls", "printout" };
-            actual = _Sut3.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            expected = false;
+            actual = sut3.LoopPermutationsAndCheckMd5RemoveFoundHash(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
 
-            // It should also work with auto-created permutations
+            // Same as above, but this time we refresh the hashlist - and then the sentence should be found
+            sut3 = new LoopSetsBase(DummyPrinter, MD5.Create(), _anagramCtrlMocker3.Object, _wordlistCtrlMocker.Object);
+            expected = true;
+            actual = sut3.LoopPermutationsAndCheckMd5RemoveFoundHash(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            Assert.Equal(expected, actual);
+
+            // It should also work with auto-created permutations - we remember to refresh the hashlist by renewing sut3
             listOfWordPermutationsReplacementStrings = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(3);
-            actual = _Sut3.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            sut3 = new LoopSetsBase(DummyPrinter, MD5.Create(), _anagramCtrlMocker3.Object, _wordlistCtrlMocker.Object);
+            actual = sut3.LoopPermutationsAndCheckMd5RemoveFoundHash(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void GivenWords_WhenWordsCorrect_ButPermutationListIsWrong_ShouldReturnFalse()
+        public void Given3Words_WhenWordsCorrect_ButPermutationListIsWrong_ShouldReturnFalse()
         {
             int noOfJackpots = 0;
             var words = new string[] { "yawls", "stout", "printout" };
@@ -75,12 +81,13 @@ namespace anagramsolverTests
 
             // Expect fail, when words are not put in right order
             bool expected = false;
-            bool actual = _Sut3.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            var sut3 = new LoopSetsBase(DummyPrinter, MD5.Create(), _anagramCtrlMocker3.Object, _wordlistCtrlMocker.Object);
+            bool actual = sut3.LoopPermutationsAndCheckMd5RemoveFoundHash(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void GivenWords_WhenWordsInCorrect_ShouldReturnFalse()
+        public void Given3Words_WhenWordsInCorrect_ShouldReturnFalse()
         {
             int noOfJackpots = 0;
             var words = new string[] { "pawls", "stout", "printout" };
@@ -89,18 +96,20 @@ namespace anagramsolverTests
 
             // Expect words not to match one of the md5Hashes
             bool expected = false;
-            bool actual = _Sut3.LoopPermutationsAndCheckMd5(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
+            var sut3 = new LoopSetsBase(DummyPrinter, MD5.Create(), _anagramCtrlMocker3.Object, _wordlistCtrlMocker.Object);
+            bool actual = sut3.LoopPermutationsAndCheckMd5RemoveFoundHash(ref noOfJackpots, words, listOfWordPermutationsReplacementStrings);
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void GivenWords_WhenNoMd5Hashes_ShouldReturnNoValue()
+        public void Given3Words_WhenNoMd5Hashes_ShouldReturnNoValue()
         {
             int noOfJackpots = 0;
 
             // Expect neither true nor false, when no md5Hashes in list (in _Sut0)
             bool expected = false;
-            bool? actualQ = _Sut0.checkMd5(ref noOfJackpots, "a b c");
+            var sut0 = new LoopSetsBase(DummyPrinter, MD5.Create(), _anagramCtrlMocker0.Object, _wordlistCtrlMocker.Object);
+            bool? actualQ = sut0.checkMd5RemoveFoundHash(ref noOfJackpots, "a b c");
             bool actual = actualQ.HasValue;
             Assert.Equal(expected, actual);
         }
