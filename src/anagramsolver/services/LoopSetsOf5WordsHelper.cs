@@ -30,9 +30,8 @@ namespace anagramsolver.services
             while (currentSetLength.SetNextSet())
             {
                 numberOfJackpots += Loop5WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
-                //_consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString());
             }
-            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". No more sets");
+            _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". No more sets");
 
             return numberOfJackpots;
         }
@@ -52,7 +51,7 @@ namespace anagramsolver.services
             var listOfPointersToWord1 = tableByWordLength[currentSetLength.Word1Length];
 
             ulong currentSetCombinations = (ulong)(listOfPointersToWord1.Count * listOfPointersToWord2.Count * listOfPointersToWord3.Count * listOfPointersToWord4.Count * listOfPointersToWord5.Count);
-            _consoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter + ". NextSet: " + currentSetLength.ToString() + " having " + currentSetCombinations + " combinations");
+            _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". NextSet: " + currentSetLength.ToString() + " having " + string.Format("{0:n0}", currentSetCombinations) + " combinations");
 
             // List to avoid checking same sentence twice
             HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength = new HashSet<int[]>(new ArrayComparer());

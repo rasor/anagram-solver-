@@ -161,7 +161,7 @@ namespace anagramsolver
             numberOfJackpots = _injectedSetsOf4WordsLooper.LoopSetsOf4WordsDoValidateAndCheckMd5(numberOfJackpots);
             Console.WriteLine("");
 
-            // D1C LoopSetsOf5Words
+            // D1D LoopSetsOf5Words
             numberOfJackpots = _injectedSetsOf5WordsLooper.LoopSetsOf5WordsDoValidateAndCheckMd5(numberOfJackpots);
             Console.WriteLine("");
         }

@@ -36,7 +36,6 @@ namespace anagramsolver
             services.AddSingleton<IAnagramContainer, AnagramContainer>();
             services.AddSingleton<IWordlistContainer, WordlistContainer>();
             services.AddSingleton(MD5.Create());
-            services.AddTransient<Md5Helper, Md5Helper>();
             services.AddSingleton<LoopSetsOf2WordsHelper, LoopSetsOf2WordsHelper>();
             services.AddSingleton<LoopSetsOf3WordsHelper, LoopSetsOf3WordsHelper>();
             services.AddSingleton<LoopSetsOf4WordsHelper, LoopSetsOf4WordsHelper>();
