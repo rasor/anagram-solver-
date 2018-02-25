@@ -58,22 +58,22 @@ namespace anagramsolver
         {
             // B1. Decrease anagram the dataset
             _injectedLogger.ConsoleWriteLine("B1_ReduceTheAnagramDataset()");
-            B1_ReduceTheAnagramDataset(_injectedAnagramContainer);
+            B1_ReduceTheAnagramDataset();
             Console.WriteLine("");
 
             // B2. Reduce wordlist the dataset
             _injectedLogger.ConsoleWriteLine("B2_ReduceTheWordlistDataset()");
-            B2_ReduceTheWordlistDataset(_injectedAnagramContainer, _injectedWordlistContainer);
+            B2_ReduceTheWordlistDataset();
             Console.WriteLine("");
 
             // C1. Find valid words in dataset being subset of anagram
             _injectedLogger.ConsoleWriteLine("C1_FindValidWordsInDataset()");
-            C1_FindValidWordsInDataset(_injectedAnagramContainer, _injectedWordlistContainer);
+            C1_FindValidWordsInDataset();
             Console.WriteLine("");
 
             // C2. Order Words In Dataset By Lenght
             _injectedLogger.ConsoleWriteLine("C2_OrderWordsInDatasetByLenght()");
-            var longestWord = C2_OrderWordsInDatasetByLenght(_injectedAnagramContainer, _injectedWordlistContainer);
+            var longestWord = C2_OrderWordsInDatasetByLenght();
             Console.WriteLine("");
 
             // D. Find valid combinations with 2 words
@@ -85,46 +85,46 @@ namespace anagramsolver
             Console.ReadKey();
         }
 
-        static void B1_ReduceTheAnagramDataset(IAnagramContainer AnagramCtrl)
+        static void B1_ReduceTheAnagramDataset()
         {
             // B1A Create a set of letters not in the anagram
             // - This will will make it possible to remove words from the list containing any of those letters
-            AnagramCtrl.CreateSetOfLettersNotInAnagram();
-            _injectedLogger.ConsoleWriteLine(" These distinct letters does the anagram NOT contain: '" + AnagramCtrl.LettersNotInAnagram.RawData + "'");
+            _injectedAnagramContainer.CreateSetOfLettersNotInAnagram();
+            _injectedLogger.ConsoleWriteLine(" These distinct letters does the anagram NOT contain: '" + _injectedAnagramContainer.LettersNotInAnagram.RawData + "'");
         }
 
-        static void B2_ReduceTheWordlistDataset(IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
+        static void B2_ReduceTheWordlistDataset()
         {
             // B2A Create a list of words only containing letters from the anagram
             // - This will reduce the list to approx 2500 words - duration: approx 2 secs
-            WordlistCtrl.Filter1_CreateListOfWordsHavingLettersFromAnagram(AnagramCtrl);
-            _injectedLogger.ConsoleWriteLine(" List_Filter1 - List only having chars present in Anagram: The list contains " + WordlistCtrl.ListFilter1_WorddictHavingAllowedChars.Count + " unique lines");
+            _injectedWordlistContainer.Filter1_CreateListOfWordsHavingLettersFromAnagram(_injectedAnagramContainer);
+            _injectedLogger.ConsoleWriteLine(" List_Filter1 - List only having chars present in Anagram: The list contains " + _injectedWordlistContainer.ListFilter1_WorddictHavingAllowedChars.Count + " unique lines");
             // PrintListFilter1(WordlistCtrl);
 
             // B2B Create a table of words being subset of the the anagram
             // - This will enable fast sum up of letters i words chosen in an arbitrary combination
-            WordlistCtrl.Filter2_CreateTableOfWordsBeingSubsetOfAnagram(AnagramCtrl);
+            _injectedWordlistContainer.Filter2_CreateTableOfWordsBeingSubsetOfAnagram(_injectedAnagramContainer);
             _injectedLogger.ConsoleWriteLine(" Table_Filter2 - created - with same number of rows as in List_Filter1");
         }
 
-        static void C1_FindValidWordsInDataset(IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
+        static void C1_FindValidWordsInDataset()
         {
             // C1A As in the Matrix count letters in the anagram
-            AnagramCtrl.CreateHeaderRow();
-            _injectedLogger.ConsoleWriteLine(" Anagram Distinct and Sorted - TableHeader    :     " + AnagramCtrl.Anagram.DistinctDataWithoutSpaceSortedAsString);
-            _injectedLogger.ConsoleWriteLine(" AnagramRow - number of each letter in anagram: {" + string.Concat(AnagramCtrl.AnagramRow) + "}");
+            _injectedAnagramContainer.CreateHeaderRow();
+            _injectedLogger.ConsoleWriteLine(" Anagram Distinct and Sorted - TableHeader    :     " + _injectedAnagramContainer.Anagram.DistinctDataWithoutSpaceSortedAsString);
+            _injectedLogger.ConsoleWriteLine(" AnagramRow - number of each letter in anagram: {" + string.Concat(_injectedAnagramContainer.AnagramRow) + "}");
 
             // C1B Foreach row in table Calculate if word is subset of anagram.
             // Store the result (of word being a subset) in col2 in the Table_Filter2
-            var noOfWordsBeingSubset = WordlistCtrl.UpdateCol2InTableFilter2(AnagramCtrl);
+            var noOfWordsBeingSubset = _injectedWordlistContainer.UpdateCol2InTableFilter2(_injectedAnagramContainer);
             _injectedLogger.ConsoleWriteLine(" Table_Filter2 - col2 updated with whether or not word is subset of anagram");
             _injectedLogger.ConsoleWriteLine(" Table_Filter2 - contains " + noOfWordsBeingSubset + " words being subsets of anagram");
         }
 
-        static int C2_OrderWordsInDatasetByLenght(IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
+        static int C2_OrderWordsInDatasetByLenght()
         {
             // C2B Create a table of valid words having a List of words with same length as rows
-            var listOfWordLenghts = WordlistCtrl.CreateTableByWordLength(AnagramCtrl);
+            var listOfWordLenghts = _injectedWordlistContainer.CreateTableByWordLength(_injectedAnagramContainer);
             var tableHlpr = new TableHelper();
             _injectedLogger.ConsoleWriteLine(" Table_ByWordLength created.    1, 2,  3,  4,  5,  6,  7, 8, 9,10,11,12");
             _injectedLogger.ConsoleWriteLine(" Number of words in each row: " + tableHlpr.ListToString(listOfWordLenghts));
@@ -166,9 +166,9 @@ namespace anagramsolver
             Console.WriteLine("");
         }
 
-        static void PrintListFilter1(IWordlistContainer WordlistCtrl)
+        static void PrintListFilter1()
         {
-            foreach (var kvp in WordlistCtrl.ListFilter1_WorddictHavingAllowedChars)
+            foreach (var kvp in _injectedWordlistContainer.ListFilter1_WorddictHavingAllowedChars)
             {
                 Console.WriteLine("                   " + kvp.Key);
             }
