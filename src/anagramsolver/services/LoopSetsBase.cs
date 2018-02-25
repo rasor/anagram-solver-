@@ -11,6 +11,7 @@ namespace anagramsolver.services
         protected Action<string> _consoleWriteLine;
         protected MD5 _md5HashComputer;
         protected Md5Helper _md5Hlpr;
+        public Md5Helper Md5Checker { get { return _md5Hlpr; } }
 
         protected IAnagramContainer _anagramCtrl;
         protected IWordlistContainer _wordlistCtrl;
@@ -92,7 +93,7 @@ namespace anagramsolver.services
             if (gotJackpot.HasValue && gotJackpot.Value)
             {
                 numberOfJackpots++;
-                _consoleWriteLine(" JACKPOT number " + numberOfJackpots + " with '" + sentenceToCheck + "'");
+                _consoleWriteLine("  =============> JACKPOT number " + numberOfJackpots + " with '" + sentenceToCheck + "' <=============");
             }
             return gotJackpot;
         }

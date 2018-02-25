@@ -40,21 +40,19 @@ namespace anagramsolver.services
 
             CurrentSetOf2Pos currentSetLength = new CurrentSetOf2Pos(totalLetters);
             // Loop sets - [1, 17] - downto set [9, 9]
-            while (currentSetLength.SetNextSet())
+            while (currentSetLength.SetNextSet() && numberOfJackpots < 3)
             {
-                numberOfJackpots += Loop2WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
+                numberOfJackpots = Loop2WordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);
             }
             _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". No more sets");
 
             return numberOfJackpots;
         }
 
-        private int Loop2WordCombinationsInCurrentSet(CurrentSetOf2Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
+        private int Loop2WordCombinationsInCurrentSet(int numberOfJackpots, CurrentSetOf2Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
             // Create list with permutations for string.Format: "{0} {1}" from [0,1] to [1,0] = 2 permutations
             string[] listOfWordPermutationsReplacementString = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(2);
-
-            int numberOfJackpots = 0;
 
             var tableByWordLength = _wordlistCtrl.TableByWordLength;
             var listOfPointersToWord2 =  tableByWordLength[currentSetLength.Word2Length];

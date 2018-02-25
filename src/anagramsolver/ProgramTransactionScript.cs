@@ -151,18 +151,22 @@ namespace anagramsolver
             int numberOfJackpots = 0;
             // D1A LoopSetsOf2Words
             numberOfJackpots = _injectedSetsOf2WordsLooper.LoopSetsOf2WordsDoValidateAndCheckMd5();
+            string[] remainingHashes = _injectedSetsOf2WordsLooper.Md5Checker.Md5Hashes;
             Console.WriteLine("");
 
             // D1B LoopSetsOf3Words
-            numberOfJackpots = _injectedSetsOf3WordsLooper.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots);
+            numberOfJackpots = _injectedSetsOf3WordsLooper.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
+            remainingHashes = _injectedSetsOf3WordsLooper.Md5Checker.Md5Hashes;
             Console.WriteLine("");
 
             // D1C LoopSetsOf4Words
-            numberOfJackpots = _injectedSetsOf4WordsLooper.LoopSetsOf4WordsDoValidateAndCheckMd5(numberOfJackpots);
+            numberOfJackpots = _injectedSetsOf4WordsLooper.LoopSetsOf4WordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
+            remainingHashes = _injectedSetsOf4WordsLooper.Md5Checker.Md5Hashes;
             Console.WriteLine("");
 
             // D1D LoopSetsOf5Words
-            numberOfJackpots = _injectedSetsOf5WordsLooper.LoopSetsOf5WordsDoValidateAndCheckMd5(numberOfJackpots);
+            numberOfJackpots = _injectedSetsOf5WordsLooper.LoopSetsOf5WordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
+            remainingHashes = _injectedSetsOf5WordsLooper.Md5Checker.Md5Hashes;
             Console.WriteLine("");
         }
 

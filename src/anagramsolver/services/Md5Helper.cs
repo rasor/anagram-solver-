@@ -13,6 +13,11 @@ namespace anagramsolver.services
     {
         private MD5 _md5HashComputer;
         private string[] _md5Hashes;
+        public string[] Md5Hashes
+        {
+            get { return _md5Hashes; }
+            set { _md5Hashes = value; }
+        }
 
         public Md5Helper(MD5 Md5HashComputer, IAnagramContainer anagramContainer)
             :this(Md5HashComputer, anagramContainer.Md5Hashes)

@@ -14,8 +14,11 @@ namespace anagramsolver.services
             base(logger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
         { }
 
-        public int LoopSetsOf5WordsDoValidateAndCheckMd5(int numberOfJackpots)
+        public int LoopSetsOf5WordsDoValidateAndCheckMd5(int numberOfJackpots, string[] remainingHashes)
         {
+            // Update hashes, so there are fewer to check against, if any was found
+            this.Md5Checker.Md5Hashes = remainingHashes;
+
             UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
             UInt64 subsetCounter = 0; // count number of combinations that is also subset of anagram
             // If the program does not check md5 if finds Combinations: 83.743.632 having Subsets: 5672 from the wordlist
@@ -27,21 +30,19 @@ namespace anagramsolver.services
 
             CurrentSetOf5Pos currentSetLength = new CurrentSetOf5Pos(totalLetters);
             // Loop sets - [1, 1, 1, 1, 14] - downto set [3, 3, 4, 4, 4] - 3,3,3,4,5
-            while (currentSetLength.SetNextSet())
+            while (currentSetLength.SetNextSet() && numberOfJackpots < 3)
             {
-                numberOfJackpots += Loop5WordCombinationsInCurrentSet(currentSetLength, ref combinationCounter, ref subsetCounter);
+                numberOfJackpots = Loop5WordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);
             }
             _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". No more sets");
 
             return numberOfJackpots;
         }
 
-        private int Loop5WordCombinationsInCurrentSet(CurrentSetOf5Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
+        private int Loop5WordCombinationsInCurrentSet(int numberOfJackpots, CurrentSetOf5Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
             // Create list with permutations for string.Format: "{0} {1} {2} {3} {4}" from [0,1,2,3,4] to [4,3,2,1,0] = 120 permutations
             string[] listOfWordPermutationsReplacementString = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(5);
-
-            int numberOfJackpots = 0;
 
             var tableByWordLength = _wordlistCtrl.TableByWordLength;
             var listOfPointersToWord5 = tableByWordLength[currentSetLength.Word5Length];
