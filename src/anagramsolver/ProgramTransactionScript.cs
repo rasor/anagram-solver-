@@ -150,7 +150,7 @@ namespace anagramsolver
 
             int numberOfJackpots = 0;
             // D1A LoopSetsOf2Words
-            numberOfJackpots = _injectedSetsOf2WordsLooper.LoopSetsOf2WordsDoValidateAndCheckMd5();
+            numberOfJackpots = _injectedSetsOf2WordsLooper.LoopSetsOfWordsDoValidateAndCheckMd5(numberOfJackpots, _injectedSetsOf2WordsLooper.Md5Checker.Md5Hashes);
             string[] remainingHashes = _injectedSetsOf2WordsLooper.Md5Checker.Md5Hashes;
             Console.WriteLine("");
 

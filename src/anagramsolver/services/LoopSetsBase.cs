@@ -16,6 +16,41 @@ namespace anagramsolver.services
         }
 
         /// <summary>
+        /// Pseudo:
+        /// Create permutationsets-loop-algoritm.
+        /// In the loop do
+        /// - Foreach set (of two words)
+        /// -- If set 1000 has been reached print the set number and the set words
+        /// -- Loop permuatations (AB and BA, when words are only two)
+        /// --- Validate A+B against anagram
+        /// --- If valid then check "A B" md5 against all 3 md5 solutions
+        /// ---- If found then remove the md5 from the list, so there only will be two to check against
+        /// ----- and return the found sentense ("A B")
+        /// </summary>
+        public int LoopSetsOfWordsDoValidateAndCheckMd5(int numberOfJackpots, string[] remainingHashes)
+        {
+            // Update hashes, so there are fewer to check against, if any was found
+            this.Md5Checker.Md5Hashes = remainingHashes;
+
+            UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
+            UInt64 subsetCounter = 0; // count number of combinations that is also subset of anagram
+            // In sets of two words: The program finds Combinations: 1623 having Subsets: 0 from the wordlist
+            // In sets of three words: If the program does not check md5 if finds Combinations: 83.743.632 having Subsets: 5672 from the wordlist
+
+            var totalLetters = _anagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
+            //TCurrentSetOfXPos currentSetLength = new TCurrentSetOfXPos(totalLetters); // Not possible with parameters in generics - so instead doing as below
+            TCurrentSetOfXPos currentSetLength = Activator.CreateInstance(typeof(TCurrentSetOfXPos), new object[] { totalLetters }) as TCurrentSetOfXPos;//new TCurrentSetOfXPos(totalLetters);
+            // Loop sets - [1, 17] - downto set [9, 9]
+            while (currentSetLength.SetNextSet() && numberOfJackpots < 3)
+            {
+                numberOfJackpots = LoopWordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);
+            }
+            _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". No more sets");
+
+            return numberOfJackpots;
+        }
+
+        /// <summary>
         /// Main loop - loops combinations of each set
         /// </summary>
         /// <param name="numberOfJackpots">a counter of found sentences</param>

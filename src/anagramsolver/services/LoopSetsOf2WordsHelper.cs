@@ -14,38 +14,6 @@ namespace anagramsolver.services
             base(logger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
         { }
 
-        /// <summary>
-        /// Pseudo:
-        /// Create permutationsets-loop-algoritm.
-        /// In the loop do
-        /// - Foreach set (of two words)
-        /// -- If set 1000 has been reached print the set number and the set words
-        /// -- Loop permuatations (AB and BA, when words are only two)
-        /// --- Validate A+B against anagram
-        /// --- If valid then check "A B" md5 against all 3 md5 solutions
-        /// ---- If found then remove the md5 from the list, so there only will be two to check against
-        /// ----- and return the found sentense ("A B")
-        /// </summary>
-        public int LoopSetsOf2WordsDoValidateAndCheckMd5()
-        {
-            int numberOfJackpots = 0;
-            UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
-            UInt64 subsetCounter = 0; // count number of combinations that is also subset of anagram
-            // The program finds Combinations: 1623 having Subsets: 0 from the wordlist
-
-            var totalLetters = _anagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
-            TCurrentSetOfXPos currentSetLength = Activator.CreateInstance(typeof(TCurrentSetOfXPos), new object[] { totalLetters }) as TCurrentSetOfXPos;//new TCurrentSetOfXPos(totalLetters);
-            //TCurrentSetOfXPos currentSetLength = new TCurrentSetOfXPos(totalLetters);
-            // Loop sets - [1, 17] - downto set [9, 9]
-            while (currentSetLength.SetNextSet() && numberOfJackpots < 3)
-            {
-                numberOfJackpots = LoopWordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);
-            }
-            _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". No more sets");
-
-            return numberOfJackpots;
-        }
-
         protected override int LoopWordCombinationsInCurrentSet(int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
             // Create list with permutations for string.Format: "{0} {1}" from [0,1] to [1,0] = 2 permutations
