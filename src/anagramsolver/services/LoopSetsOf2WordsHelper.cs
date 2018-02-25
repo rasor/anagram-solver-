@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace anagramsolver.services
 {
-    public class LoopSetsOf2WordsHelper: LoopSetsBase
+    public class LoopSetsOf2WordsHelper<TCurrentSetOfXPos> : LoopSetsBase<TCurrentSetOfXPos> where TCurrentSetOfXPos : CurrentSetOf2Pos, new()
     {
         public LoopSetsOf2WordsHelper(ConsoleLogger logger, MD5 Md5HashComputer,
             IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl) : 
@@ -33,23 +33,20 @@ namespace anagramsolver.services
             UInt64 subsetCounter = 0; // count number of combinations that is also subset of anagram
             // The program finds Combinations: 1623 having Subsets: 0 from the wordlist
 
-            var tableToLoopThrough = _wordlistCtrl.TableByWordLength;
             var totalLetters = _anagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
-            var hasUnEvenChars = totalLetters % 2; //if even the then the middle words are both first and last word - so that row in the table needs special looping
-            var middleWordLetters = (totalLetters + hasUnEvenChars) / 2;
-
-            CurrentSetOf2Pos currentSetLength = new CurrentSetOf2Pos(totalLetters);
+            TCurrentSetOfXPos currentSetLength = Activator.CreateInstance(typeof(TCurrentSetOfXPos), new object[] { totalLetters }) as TCurrentSetOfXPos;//new TCurrentSetOfXPos(totalLetters);
+            //TCurrentSetOfXPos currentSetLength = new TCurrentSetOfXPos(totalLetters);
             // Loop sets - [1, 17] - downto set [9, 9]
             while (currentSetLength.SetNextSet() && numberOfJackpots < 3)
             {
-                numberOfJackpots = Loop2WordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);
+                numberOfJackpots = LoopWordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);
             }
             _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". No more sets");
 
             return numberOfJackpots;
         }
 
-        private int Loop2WordCombinationsInCurrentSet(int numberOfJackpots, CurrentSetOf2Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
+        protected override int LoopWordCombinationsInCurrentSet(int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
             // Create list with permutations for string.Format: "{0} {1}" from [0,1] to [1,0] = 2 permutations
             string[] listOfWordPermutationsReplacementString = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(2);

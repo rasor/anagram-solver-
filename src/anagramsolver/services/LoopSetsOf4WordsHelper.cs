@@ -23,23 +23,19 @@ namespace anagramsolver.services
             UInt64 subsetCounter = 0; // count number of combinations that is also subset of anagram
             // If the program does not check md5 if finds Combinations: 83.743.632 having Subsets: 5672 from the wordlist
 
-            var tableToLoopThrough = _wordlistCtrl.TableByWordLength;
             var totalLetters = _anagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
-            var hasUnEvenChars = totalLetters % 2; //if even the then the middle words are both first and last word - so that row in the table needs special looping
-            var middleWordLetters = (totalLetters + hasUnEvenChars) / 2;
-
             CurrentSetOf4Pos currentSetLength = new CurrentSetOf4Pos(totalLetters);
             // Loop sets - [1, 1, 1, 15] - downto set [4, 4, 5, 5]
             while (currentSetLength.SetNextSet() && numberOfJackpots < 3)
             {
-                numberOfJackpots = Loop4WordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);
+                numberOfJackpots = LoopWordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);
             }
             _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". No more sets");
 
             return numberOfJackpots;
         }
 
-        private int Loop4WordCombinationsInCurrentSet(int numberOfJackpots, CurrentSetOf4Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
+        protected int LoopWordCombinationsInCurrentSet(int numberOfJackpots, CurrentSetOf4Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
             // Create list with permutations for string.Format: "{0} {1} {2} {3}" from [0,1,2,3] to [3,2,1,0] = 24 permutations
             string[] listOfWordPermutationsReplacementString = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(4);

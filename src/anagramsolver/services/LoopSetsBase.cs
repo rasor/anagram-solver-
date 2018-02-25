@@ -1,4 +1,5 @@
 ﻿using anagramsolver.containers;
+using anagramsolver.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,26 @@ using System.Security.Cryptography;
 
 namespace anagramsolver.services
 {
+    public abstract class LoopSetsBase<TCurrentSetOfXPos>: LoopSetsBase where TCurrentSetOfXPos : CurrentSetOf2Pos
+    {
+        public LoopSetsBase(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
+            IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl) :
+            base(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
+        {
+        }
+
+        /// <summary>
+        /// Main loop - loops combinations of each set
+        /// </summary>
+        /// <param name="numberOfJackpots">a counter of found sentences</param>
+        /// <param name="currentSetLength">e.g [2, 7, 9] - 3 list of words having length 2, 7 and 9 chars</param>
+        /// <param name="combinationCounter">a counter of all combinations in all sets</param>
+        /// <param name="subsetCounter">a counter of all valid subsets (of the anagram) in all sets</param>
+        /// <returns>numberOfJackpots</returns>
+        protected abstract int LoopWordCombinationsInCurrentSet(int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter);
+
+    }
+
     public class LoopSetsBase
     {
         protected Action<string> _consoleWriteLine;
@@ -133,6 +154,5 @@ namespace anagramsolver.services
             }
             return combinedRow;
         }
-
     }
 }

@@ -1,0 +1,113 @@
+Hello from AnagramSolver!
+
+13.37.22.258 A1_LoadAnagram()
+13.37.22.261  This is the input anagram: 'poultry outwits ants'
+13.37.22.266  These distinct letters does the anagram contain: 'poultrywisan'
+13.37.22.274  As above, but sorted: 'ailnoprstuwy' - also called TableHeader
+
+13.37.22.274 A2_LoadWordlist()
+13.37.22.274  The unfiltered input wordlist contains 99175 lines
+
+13.37.22.274 B1_ReduceTheAnagramDataset()
+13.37.22.277  These distinct letters does the anagram NOT contain: 'bcdefghjkmqvxz‚”''
+
+13.37.22.277 B2_ReduceTheWordlistDataset()
+13.37.22.523  List_Filter1 - List only having chars present in Anagram: The list contains 2531 unique lines
+13.37.22.538  Table_Filter2 - created - with same number of rows as in List_Filter1
+
+13.37.22.538 C1_FindValidWordsInDataset()
+13.37.22.539  Anagram Distinct and Sorted - TableHeader    :     ailnoprstuwy
+13.37.22.540  AnagramRow - number of each letter in anagram: {000111121124211}
+13.37.22.541  Table_Filter2 - col2 updated with whether or not word is subset of anagram
+13.37.22.541  Table_Filter2 - contains 1669 words being subsets of anagram
+
+13.37.22.541 C2_OrderWordsInDatasetByLenght()
+13.37.22.543  Table_ByWordLength created.    1, 2,  3,  4,  5,  6,  7, 8, 9,10,11,12
+13.37.22.544  Number of words in each row: [12,58,185,438,440,282,151,66,23,12,2,0,0,0,0,0,0]
+
+13.37.22.544 D1_FindValidCombinations()
+13.37.22.565  Combinations: 0. Subsets: 0. NextSet: [1, 17] having 0 combinations
+13.37.22.565  Combinations: 0. Subsets: 0. NextSet: [2, 16] having 0 combinations
+13.37.22.565  Combinations: 0. Subsets: 0. NextSet: [3, 15] having 0 combinations
+13.37.22.565  Combinations: 0. Subsets: 0. NextSet: [4, 14] having 0 combinations
+13.37.22.565  Combinations: 0. Subsets: 0. NextSet: [5, 13] having 0 combinations
+13.37.22.565  Combinations: 0. Subsets: 0. NextSet: [6, 12] having 0 combinations
+13.37.22.565  Combinations: 0. Subsets: 0. NextSet: [7, 11] having 302 combinations
+13.37.22.566  Combinations: 302. Subsets: 0. NextSet: [8, 10] having 792 combinations
+13.37.22.567  Combinations: 1.094. Subsets: 0. NextSet: [9, 9] having 529 combinations
+13.37.22.567  Combinations: 1.623. Subsets: 0. No more sets
+
+13.37.22.574  Combinations: 0. Subsets: 0. NextSet: [1, 1, 16] having 0 combinations
+13.37.22.574  Combinations: 0. Subsets: 0. NextSet: [1, 2, 15] having 0 combinations
+13.37.22.574  Combinations: 0. Subsets: 0. NextSet: [1, 3, 14] having 0 combinations
+13.37.22.574  Combinations: 0. Subsets: 0. NextSet: [1, 4, 13] having 0 combinations
+13.37.22.574  Combinations: 0. Subsets: 0. NextSet: [1, 5, 12] having 0 combinations
+13.37.22.574  Combinations: 0. Subsets: 0. NextSet: [1, 6, 11] having 6.768 combinations
+13.37.22.579  Combinations: 6.768. Subsets: 2. NextSet: [1, 7, 10] having 21.744 combinations
+13.37.22.584  Combinations: 28.512. Subsets: 2. NextSet: [1, 8, 9] having 18.216 combinations
+13.37.22.588  Combinations: 46.728. Subsets: 7. NextSet: [2, 2, 14] having 0 combinations
+13.37.22.588  Combinations: 46.728. Subsets: 7. NextSet: [2, 3, 13] having 0 combinations
+13.37.22.588  Combinations: 46.728. Subsets: 7. NextSet: [2, 4, 12] having 0 combinations
+13.37.22.588  Combinations: 46.728. Subsets: 7. NextSet: [2, 5, 11] having 51.040 combinations
+13.37.22.598  Combinations: 97.768. Subsets: 11. NextSet: [2, 6, 10] having 196.272 combinations
+13.37.22.639  Combinations: 294.040. Subsets: 41. NextSet: [2, 7, 9] having 201.434 combinations
+13.37.22.661   =============> JACKPOT number 1 with 'ty outlaws printouts' <=============
+13.37.22.679  Combinations: 495.474. Subsets: 55. NextSet: [2, 8, 8] having 252.648 combinations
+13.37.22.728  Combinations: 748.122. Subsets: 55. NextSet: [3, 3, 12] having 0 combinations
+13.37.22.728  Combinations: 748.122. Subsets: 55. NextSet: [3, 4, 11] having 162.060 combinations
+13.37.22.760  Combinations: 910.182. Subsets: 60. NextSet: [3, 5, 10] having 976.800 combinations
+13.37.22.966  Combinations: 1.886.982. Subsets: 271. NextSet: [3, 6, 9] having 1.199.910 combinations
+13.37.23.198  Combinations: 3.086.892. Subsets: 400. NextSet: [3, 7, 8] having 1.843.710 combinations
+13.37.23.541  Combinations: 4.930.602. Subsets: 559. NextSet: [4, 4, 10] having 2.302.128 combinations
+13.37.23.987   UniqueListOfSentencesHavingWordsWithSameLength: 229. SkippedChecks: 229
+13.37.23.987  Combinations: 7.232.730. Subsets: 1.017. NextSet: [4, 5, 9] having 4.432.560 combinations
+13.37.24.828  Combinations: 11.665.290. Subsets: 1.456. NextSet: [4, 6, 8] having 8.152.056 combinations
+13.37.26.353  Combinations: 19.817.346. Subsets: 2.035. NextSet: [4, 7, 7] having 9.986.838 combinations
+13.37.28.202   UniqueListOfSentencesHavingWordsWithSameLength: 477. SkippedChecks: 477
+13.37.28.202  Combinations: 29.804.184. Subsets: 2.989. NextSet: [5, 5, 8] having 12.777.600 combinations
+13.37.29.195   =============> JACKPOT number 2 with 'printout stout yawls' <=============
+13.37.30.565   UniqueListOfSentencesHavingWordsWithSameLength: 172. SkippedChecks: 172
+13.37.30.565  Combinations: 42.581.784. Subsets: 3.333. NextSet: [5, 6, 7] having 18.736.080 combinations
+13.37.34.080  Combinations: 61.317.864. Subsets: 4.568. NextSet: [6, 6, 6] having 22.425.768 combinations
+13.37.38.261   UniqueListOfSentencesHavingWordsWithSameLength: 184. SkippedChecks: 920
+13.37.38.261  Combinations: 83.743.632. Subsets: 5.672. No more sets
+
+13.37.38.267  Combinations: 0. Subsets: 0. NextSet: [1, 1, 1, 15] having 0 combinations
+13.37.38.267  Combinations: 0. Subsets: 0. NextSet: [1, 1, 2, 14] having 0 combinations
+13.37.38.267  Combinations: 0. Subsets: 0. NextSet: [1, 1, 3, 13] having 0 combinations
+13.37.38.268  Combinations: 0. Subsets: 0. NextSet: [1, 1, 4, 12] having 0 combinations
+13.37.38.268  Combinations: 0. Subsets: 0. NextSet: [1, 1, 5, 11] having 126.720 combinations
+13.37.38.297  Combinations: 126.720. Subsets: 20. NextSet: [1, 1, 6, 10] having 487.296 combinations
+13.37.38.428  Combinations: 614.016. Subsets: 222. NextSet: [1, 1, 7, 9] having 500.112 combinations
+13.37.38.549  Combinations: 1.114.128. Subsets: 342. NextSet: [1, 1, 8, 8] having 627.264 combinations
+13.37.38.685  Combinations: 1.741.392. Subsets: 368. NextSet: [1, 2, 2, 13] having 0 combinations
+13.37.38.685  Combinations: 1.741.392. Subsets: 368. NextSet: [1, 2, 3, 12] having 0 combinations
+13.37.38.685  Combinations: 1.741.392. Subsets: 368. NextSet: [1, 2, 4, 11] having 609.696 combinations
+13.37.38.822  Combinations: 2.351.088. Subsets: 411. NextSet: [1, 2, 5, 10] having 3.674.880 combinations
+13.37.39.709  Combinations: 6.025.968. Subsets: 1.216. NextSet: [1, 2, 6, 9] having 4.514.256 combinations
+13.37.40.731  Combinations: 10.540.224. Subsets: 1.745. NextSet: [1, 2, 7, 8] having 6.936.336 combinations
+13.37.42.266  Combinations: 17.476.560. Subsets: 2.317. NextSet: [1, 3, 3, 11] having 821.400 combinations
+13.37.42.451  Combinations: 18.297.960. Subsets: 2.399. NextSet: [1, 3, 4, 10] having 11.668.320 combinations
+13.37.45.282  Combinations: 29.966.280. Subsets: 5.146. NextSet: [1, 3, 5, 9] having 22.466.400 combinations
+13.37.50.359  Combinations: 52.432.680. Subsets: 8.058. NextSet: [1, 3, 6, 8] having 41.318.640 combinations
+13.37.59.478  Combinations: 93.751.320. Subsets: 11.882. NextSet: [1, 3, 7, 7] having 50.618.220 combinations
+13.38.10.748  Combinations: 144.369.540. Subsets: 17.694. NextSet: [1, 4, 4, 9] having 52.948.944 combinations
+13.38.23.133  Combinations: 197.318.484. Subsets: 27.510. NextSet: [1, 4, 5, 8] having 152.634.240 combinations
+13.38.56.407  Combinations: 349.952.724. Subsets: 38.318. NextSet: [1, 4, 6, 7] having 223.810.992 combinations
+13.39.46.204  Combinations: 573.763.716. Subsets: 63.259. NextSet: [1, 5, 5, 7] having 350.803.200 combinations
+13.41.02.545  Combinations: 924.566.916. Subsets: 86.163. NextSet: [1, 5, 6, 6] having 419.886.720 combinations
+13.42.33.595  Combinations: 1.344.453.636. Subsets: 111.249. NextSet: [2, 2, 2, 12] having 0 combinations
+13.42.33.595  Combinations: 1.344.453.636. Subsets: 111.249. NextSet: [2, 2, 3, 11] having 1.244.680 combinations
+13.42.33.867  Combinations: 1.345.698.316. Subsets: 111.316. NextSet: [2, 2, 4, 10] having 17.681.184 combinations
+13.42.37.880  Combinations: 1.363.379.500. Subsets: 113.508. NextSet: [2, 2, 5, 9] having 34.043.680 combinations
+13.42.45.290  Combinations: 1.397.423.180. Subsets: 115.815. NextSet: [2, 2, 6, 8] having 62.610.768 combinations
+13.42.58.703  Combinations: 1.460.033.948. Subsets: 118.739. NextSet: [2, 2, 7, 7] having 76.702.564 combinations
+13.43.15.237  Combinations: 1.536.736.512. Subsets: 123.259. NextSet: [2, 3, 3, 10] having 23.820.600 combinations
+13.43.20.701  Combinations: 1.560.557.112. Subsets: 126.525. NextSet: [2, 3, 4, 9] having 108.094.020 combinations
+13.43.40.251   =============> JACKPOT number 3 with 'wu lisp not statutory' <=============
+13.43.44.510  Combinations: 1.668.651.132. Subsets: 138.494. No more sets
+
+13.43.44.512  Combinations: 0. Subsets: 0. No more sets
+
+
+13.43.44.512 Done AnagramSolver! - Press any key

@@ -1,4 +1,5 @@
 ﻿using anagramsolver.containers;
+using anagramsolver.models;
 using anagramsolver.services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +37,7 @@ namespace anagramsolver
             services.AddSingleton<IAnagramContainer, AnagramContainer>();
             services.AddSingleton<IWordlistContainer, WordlistContainer>();
             services.AddSingleton(MD5.Create());
-            services.AddSingleton<LoopSetsOf2WordsHelper, LoopSetsOf2WordsHelper>();
+            services.AddSingleton<LoopSetsOf2WordsHelper<CurrentSetOf2Pos>, LoopSetsOf2WordsHelper<CurrentSetOf2Pos>>();
             services.AddSingleton<LoopSetsOf3WordsHelper, LoopSetsOf3WordsHelper>();
             services.AddSingleton<LoopSetsOf4WordsHelper, LoopSetsOf4WordsHelper>();
             services.AddSingleton<LoopSetsOf5WordsHelper, LoopSetsOf5WordsHelper>();
