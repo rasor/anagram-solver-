@@ -22,22 +22,32 @@ namespace anagramsolver.services
             _md5Hashes = Md5Hashes;
         }
 
-        public bool VerifyMd5Hash(string input)
+        /// <summary>
+        /// Check md5 against _md5Hashes.
+        /// Remove hash from list if found
+        /// If nonhashes left in list return unset bool
+        /// </summary>
+        /// <param name="input">string to check md5 on</param>
+        /// <returns>Did string match any of the hashes?</returns>
+        public bool? VerifyMd5Hash(string input)
         {
-            // Hash the input.
-            string hashOfInput = GetMd5Hash(_md5HashComputer, input);
-
-            // Create a StringComparer an compare the hashes.
-            StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-
-            // Check aginst each md5 string 
-            bool result = false;
-            foreach (var md5HashToVerifyAgainst in _md5Hashes)
+            bool? result = null;
+            if (_md5Hashes.Length > 0)
             {
-                result = (0 == comparer.Compare(hashOfInput, md5HashToVerifyAgainst));
-                if (true)
+                // Hash the input.
+                string hashOfInput = GetMd5Hash(_md5HashComputer, input);
+
+                // Create a StringComparer an compare the hashes.
+                StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+
+                // Check aginst each md5 string 
+                foreach (var md5HashToVerifyAgainst in _md5Hashes)
                 {
-                    break;
+                    result = (0 == comparer.Compare(hashOfInput, md5HashToVerifyAgainst));
+                    if (true)
+                    {
+                        break;
+                    }
                 }
             }
             return result;

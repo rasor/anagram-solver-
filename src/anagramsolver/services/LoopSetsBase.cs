@@ -61,20 +61,30 @@ namespace anagramsolver.services
             {
                 if (!gotJackpot)
                 {
-                    gotJackpot = checkMd5(ref numberOfJackpots, string.Format(permutationReplacementString, words));
+                    var gotJackpotTest = checkMd5(ref numberOfJackpots, string.Format(permutationReplacementString, words));
+                    if (gotJackpotTest.HasValue)
+                    {
+                        gotJackpot = gotJackpotTest.Value;
+                    }
+                    else
+                    {
+                        // Break if no more md5 hashes in list
+                        break;
+                    }
                 }
                 else
                 {
+                    // Break if sentence was found
                     break;
                 }
             }
             return gotJackpot;
         }
 
-        protected bool checkMd5(ref int numberOfJackpots, string sentenceToCheck)
+        public bool? checkMd5(ref int numberOfJackpots, string sentenceToCheck)
         {
-            bool gotJackpot = _md5Hlpr.VerifyMd5Hash(sentenceToCheck);
-            if (gotJackpot)
+            bool? gotJackpot = _md5Hlpr.VerifyMd5Hash(sentenceToCheck);
+            if (gotJackpot.HasValue && gotJackpot.Value)
             {
                 numberOfJackpots++;
                 _consoleWriteLine(" JACKPOT number " + numberOfJackpots + " with '" + sentenceToCheck + "'");
