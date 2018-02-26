@@ -23,9 +23,7 @@ namespace anagramsolver.models
         protected bool _isEven;
         protected int _lowestMiddleWordLetters;
 
-        public CurrentSetOf2Pos()
-        {
-        }
+        public CurrentSetOf2Pos() { }
         public CurrentSetOf2Pos(int AnagramLength)
         {
             _word1Length = 0; // initial value to indicate looping has nnot started yet

@@ -14,7 +14,7 @@ namespace anagramsolver
         private static IWordlistContainer _injectedWordlistContainer;
         private static ConsoleLogger _injectedLogger;
         private static LoopSetsOf2WordsHelper<CurrentSetOf2Pos> _injectedSetsOf2WordsLooper;
-        private static LoopSetsOf3WordsHelper _injectedSetsOf3WordsLooper;
+        private static LoopSetsOf3WordsHelper<CurrentSetOf3Pos> _injectedSetsOf3WordsLooper;
         private static LoopSetsOf4WordsHelper _injectedSetsOf4WordsLooper;
         private static LoopSetsOf5WordsHelper _injectedSetsOf5WordsLooper;
 
@@ -25,7 +25,7 @@ namespace anagramsolver
 
         public ProgramTransactionScript(IConfigurationRoot config, ConsoleLogger logger,
             IAnagramContainer anagramContainer, IWordlistContainer wordlistContainer,
-            LoopSetsOf2WordsHelper<CurrentSetOf2Pos> setsOf2WordsLooper, LoopSetsOf3WordsHelper setsOf3WordsLooper,
+            LoopSetsOf2WordsHelper<CurrentSetOf2Pos> setsOf2WordsLooper, LoopSetsOf3WordsHelper<CurrentSetOf3Pos> setsOf3WordsLooper,
             LoopSetsOf4WordsHelper setsOf4WordsLooper, LoopSetsOf5WordsHelper setsOf5WordsLooper)
         {
             _injectedLogger = logger;

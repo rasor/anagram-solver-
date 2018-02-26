@@ -12,6 +12,7 @@ namespace anagramsolver.models
         protected int _word3Length;
         public int Word3Length { get { return _word3Length - 1; } } //subtract 1 to match index in table
 
+        public CurrentSetOf3Pos() {}
         public CurrentSetOf3Pos(int AnagramLength): 
             base(AnagramLength)
         {
