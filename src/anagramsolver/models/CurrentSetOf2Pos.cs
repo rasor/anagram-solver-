@@ -5,7 +5,7 @@ using System.Text;
 namespace anagramsolver.models
 {
     /// <summary>
-    /// Contains length of two words, which combined is length of anagram
+    /// Contains length of 2 words, which combined is length of anagram
     /// </summary>
     public class CurrentSetOf2Pos
     {

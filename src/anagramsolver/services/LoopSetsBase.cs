@@ -38,6 +38,7 @@ namespace anagramsolver.services
             // In sets of three words: If the program does not check md5 if finds Combinations: 83.743.632 having Subsets: 5672 from the wordlist
 
             var totalLetters = _anagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
+            var noOfSecrets = _anagramCtrl.Md5Hashes.Length; //3
             //TCurrentSetOfXPos currentSetLength = new TCurrentSetOfXPos(totalLetters); // Not possible with parameters in generics - so instead doing as below
             TCurrentSetOfXPos currentSetLength = Activator.CreateInstance(typeof(TCurrentSetOfXPos), new object[] { totalLetters }) as TCurrentSetOfXPos;//new TCurrentSetOfXPos(totalLetters);
             // When Sentence Lenght (ex spaces) = 18 = totalLetters
@@ -45,7 +46,7 @@ namespace anagramsolver.services
             // Loop sets - [1, 1, 16] - downto set [6, 6, 6] when using CurrentSetOf3Pos
             // Loop sets - [1, 1, 1, 15] - downto set [4, 4, 5, 5] when using CurrentSetOf4Pos
             // Loop sets - [1, 1, 1, 1, 14] - downto set [3, 3, 4, 4, 4] - 3,3,3,4,5 when using CurrentSetOf4Pos
-            while (currentSetLength.SetNextSet() && numberOfJackpots < 3)
+            while (currentSetLength.SetNextSet() && numberOfJackpots < noOfSecrets)
             {
                 numberOfJackpots = LoopWordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);
             }
