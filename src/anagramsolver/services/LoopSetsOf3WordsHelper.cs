@@ -20,9 +20,9 @@ namespace anagramsolver.services
             string[] listOfWordPermutationsReplacementString = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(3);
 
             var tableByWordLength = _wordlistCtrl.TableByWordLength;
-            var listOfPointersToWord3 = tableByWordLength[currentSetLength.Word3Length];
-            var listOfPointersToWord2 = tableByWordLength[currentSetLength.Word2Length];
-            var listOfPointersToWord1 = tableByWordLength[currentSetLength.Word1Length];
+            var listOfPointersToWord3 = tableByWordLength[currentSetLength.DictOfWordLengths[3] - 1];
+            var listOfPointersToWord2 = tableByWordLength[currentSetLength.DictOfWordLengths[2] - 1];
+            var listOfPointersToWord1 = tableByWordLength[currentSetLength.DictOfWordLengths[1] - 1];
 
             ulong currentSetCombinations = (ulong)(listOfPointersToWord1.Count * listOfPointersToWord2.Count * listOfPointersToWord3.Count);
             _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". NextSet: " + currentSetLength.ToString() + " having " + string.Format("{0:n0}", currentSetCombinations) + " combinations");

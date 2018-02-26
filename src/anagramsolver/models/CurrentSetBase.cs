@@ -9,7 +9,7 @@ namespace anagramsolver.models
     /// </summary>
     public abstract class CurrentSetBase
     {
-        // Dictionary<WordNo, WordLength>
+        // Lenght of words in set - Dictionary<WordNo, WordLength>
         protected Dictionary<short, int> _dictOfWordLengths = new Dictionary<short, int>();
         public Dictionary<short, int> DictOfWordLengths { get { return _dictOfWordLengths; } }
 

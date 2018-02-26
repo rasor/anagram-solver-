@@ -9,10 +9,6 @@ namespace anagramsolver.models
     /// </summary>
     public class CurrentSetOf2Pos: CurrentSetBase
     {
-        // Lenght of words in set
-        public int Word1Length { get { return _dictOfWordLengths[1] - 1; } } //subtract 1 to match index in table
-        public int Word2Length { get { return _dictOfWordLengths[2] - 1; } } //subtract 1 to match index in table
-
         // Does any words in the set have same length?
         protected bool _anyOfSameLength;
         public bool AnyOfSameLength { get { return _anyOfSameLength; } }

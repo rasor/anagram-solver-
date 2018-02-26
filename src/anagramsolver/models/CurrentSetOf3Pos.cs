@@ -9,8 +9,6 @@ namespace anagramsolver.models
     /// </summary>
     public class CurrentSetOf3Pos: CurrentSetOf2Pos
     {
-        public int Word3Length { get { return _dictOfWordLengths[3] - 1; } } //subtract 1 to match index in table
-
         public CurrentSetOf3Pos() {}
         public CurrentSetOf3Pos(int AnagramLength): 
             base(AnagramLength)
