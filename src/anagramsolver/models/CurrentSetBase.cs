@@ -29,5 +29,11 @@ namespace anagramsolver.models
         /// </summary>
         /// <returns></returns>
         public abstract bool SetNextSet();
+
+        public override string ToString()
+        {
+            string result = "[" + String.Join(", ",_dictOfWordLengths.Values) + "]";
+            return result;
+        }
     }
 }

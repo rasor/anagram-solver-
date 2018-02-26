@@ -77,11 +77,5 @@ namespace anagramsolver.models
 
             return nextSetWasSet;
         }
-
-        public override string ToString()
-        {
-            string result = "[" + _dictOfWordLengths[1] + ", " + _dictOfWordLengths[2] + ", " + _dictOfWordLengths[3] + ", " + _dictOfWordLengths[4] + ", " + _dictOfWordLengths[5] + "]";
-            return result;
-        }
     }
 }
