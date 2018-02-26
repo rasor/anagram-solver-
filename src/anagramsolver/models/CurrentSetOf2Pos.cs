@@ -7,12 +7,11 @@ namespace anagramsolver.models
     /// <summary>
     /// Contains length of 2 words, which combined is length of anagram
     /// </summary>
-    public class CurrentSetOf2Pos
+    public class CurrentSetOf2Pos: CurrentSetBase
     {
         // Lenght of words in set
-        protected int _word1Length, _word2Length;
-        public int Word1Length { get { return _word1Length - 1; } } //subtract 1 to match index in table
-        public int Word2Length { get { return _word2Length - 1; } } //subtract 1 to match index in table
+        public int Word1Length { get { return _dictOfWordLengths[1] - 1; } } //subtract 1 to match index in table
+        public int Word2Length { get { return _dictOfWordLengths[2] - 1; } } //subtract 1 to match index in table
 
         // Does any words in the set have same length?
         protected bool _anyOfSameLength;
@@ -26,37 +25,37 @@ namespace anagramsolver.models
         public CurrentSetOf2Pos() { }
         public CurrentSetOf2Pos(int AnagramLength)
         {
-            _word1Length = 0; // initial value to indicate looping has nnot started yet
-            _word2Length = AnagramLength -1;
+            _dictOfWordLengths[1] = 0; // initial value to indicate looping has nnot started yet
+            _dictOfWordLengths[2] = AnagramLength -1;
             _anagramLength = AnagramLength;
         }
 
         public bool IsEvenAndIsMiddleLength() {
-            bool result = (_isEven && (_word1Length == _lowestMiddleWordLetters));
+            bool result = (_isEven && (_dictOfWordLengths[1] == _lowestMiddleWordLetters));
             return result;
         }
 
-        public virtual bool SetNextSet() {
+        public override bool SetNextSet() {
             bool nextSetWasSet = true;
             // increment number
-            _word1Length++;
+            _dictOfWordLengths[1]++;
             // sum of all wordlenghts reamins 18
-            _word2Length = _anagramLength - _word1Length;
+            _dictOfWordLengths[2] = _anagramLength - _dictOfWordLengths[1];
 
             // Stop if any left side numbers are larger than numbers to its rigth side
-            if (_word1Length > _word2Length)
+            if (_dictOfWordLengths[1] > _dictOfWordLengths[2])
             {
                 nextSetWasSet = false;
             }
 
             // Calculate AnyOfSameLength
-            _anyOfSameLength = (_word1Length == _word2Length);
+            _anyOfSameLength = (_dictOfWordLengths[1] == _dictOfWordLengths[2]);
 
             return nextSetWasSet;
         }
 
         public override string ToString() {
-            string result = "[" + _word1Length + ", " + _word2Length + "]";
+            string result = "[" + _dictOfWordLengths[1] + ", " + _dictOfWordLengths[2] + "]";
             return result;
         }
     }
