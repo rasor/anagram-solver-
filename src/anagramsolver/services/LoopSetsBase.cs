@@ -43,6 +43,8 @@ namespace anagramsolver.services
             // When Sentence Lenght (ex spaces) = 18 = totalLetters
             // Loop sets - [1, 17] - downto set [9, 9] when using CurrentSetOf2Pos
             // Loop sets - [1, 1, 16] - downto set [6, 6, 6] when using CurrentSetOf3Pos
+            // Loop sets - [1, 1, 1, 15] - downto set [4, 4, 5, 5] when using CurrentSetOf4Pos
+            // Loop sets - [1, 1, 1, 1, 14] - downto set [3, 3, 4, 4, 4] - 3,3,3,4,5 when using CurrentSetOf4Pos
             while (currentSetLength.SetNextSet() && numberOfJackpots < 3)
             {
                 numberOfJackpots = LoopWordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);

@@ -7,35 +7,14 @@ using System.Security.Cryptography;
 
 namespace anagramsolver.services
 {
-    public class LoopSetsOf5WordsHelper: LoopSetsBase
+    public class LoopSetsOf5WordsHelper<TCurrentSetOfXPos> : LoopSetsBase<TCurrentSetOfXPos> where TCurrentSetOfXPos : CurrentSetOf5Pos, new()
     {
         public LoopSetsOf5WordsHelper(ConsoleLogger logger, MD5 Md5HashComputer,
             IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl) :
             base(logger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
         { }
 
-        public int LoopSetsOfWordsDoValidateAndCheckMd5(int numberOfJackpots, string[] remainingHashes)
-        {
-            // Update hashes, so there are fewer to check against, if any was found
-            this.Md5Checker.Md5Hashes = remainingHashes;
-
-            UInt64 combinationCounter = 0; // max 18.446.744.073.709.551.615 .... yarn
-            UInt64 subsetCounter = 0; // count number of combinations that is also subset of anagram
-            // If the program does not check md5 if finds Combinations: 83.743.632 having Subsets: 5672 from the wordlist
-
-            var totalLetters = _anagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
-            CurrentSetOf5Pos currentSetLength = new CurrentSetOf5Pos(totalLetters);
-            // Loop sets - [1, 1, 1, 1, 14] - downto set [3, 3, 4, 4, 4] - 3,3,3,4,5
-            while (currentSetLength.SetNextSet() && numberOfJackpots < 3)
-            {
-                numberOfJackpots = LoopWordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);
-            }
-            _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". No more sets");
-
-            return numberOfJackpots;
-        }
-
-        protected int LoopWordCombinationsInCurrentSet(int numberOfJackpots, CurrentSetOf5Pos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
+        protected override int LoopWordCombinationsInCurrentSet(int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
         {
             // Create list with permutations for string.Format: "{0} {1} {2} {3} {4}" from [0,1,2,3,4] to [4,3,2,1,0] = 120 permutations
             string[] listOfWordPermutationsReplacementString = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(5);
