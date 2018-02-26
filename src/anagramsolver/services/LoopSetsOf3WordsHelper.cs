@@ -14,7 +14,7 @@ namespace anagramsolver.services
             base(logger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
         { }
 
-        public int LoopSetsOf3WordsDoValidateAndCheckMd5(int numberOfJackpots, string[] remainingHashes)
+        public int LoopSetsOfWordsDoValidateAndCheckMd5(int numberOfJackpots, string[] remainingHashes)
         {
             // Update hashes, so there are fewer to check against, if any was found
             this.Md5Checker.Md5Hashes = remainingHashes;

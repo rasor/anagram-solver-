@@ -40,7 +40,9 @@ namespace anagramsolver.services
             var totalLetters = _anagramCtrl.Anagram.RawDataWithoutSpace.Length; //18
             //TCurrentSetOfXPos currentSetLength = new TCurrentSetOfXPos(totalLetters); // Not possible with parameters in generics - so instead doing as below
             TCurrentSetOfXPos currentSetLength = Activator.CreateInstance(typeof(TCurrentSetOfXPos), new object[] { totalLetters }) as TCurrentSetOfXPos;//new TCurrentSetOfXPos(totalLetters);
-            // Loop sets - [1, 17] - downto set [9, 9]
+            // When Sentence Lenght (ex spaces) = 18 = totalLetters
+            // Loop sets - [1, 17] - downto set [9, 9] when using CurrentSetOf2Pos
+            // Loop sets - [1, 1, 16] - downto set [6, 6, 6] when using CurrentSetOf3Pos
             while (currentSetLength.SetNextSet() && numberOfJackpots < 3)
             {
                 numberOfJackpots = LoopWordCombinationsInCurrentSet(numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter);

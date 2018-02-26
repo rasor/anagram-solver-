@@ -155,17 +155,17 @@ namespace anagramsolver
             Console.WriteLine("");
 
             // D1B LoopSetsOf3Words
-            numberOfJackpots = _injectedSetsOf3WordsLooper.LoopSetsOf3WordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
+            numberOfJackpots = _injectedSetsOf3WordsLooper.LoopSetsOfWordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
             remainingHashes = _injectedSetsOf3WordsLooper.Md5Checker.Md5Hashes;
             Console.WriteLine("");
 
             // D1C LoopSetsOf4Words
-            numberOfJackpots = _injectedSetsOf4WordsLooper.LoopSetsOf4WordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
+            numberOfJackpots = _injectedSetsOf4WordsLooper.LoopSetsOfWordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
             remainingHashes = _injectedSetsOf4WordsLooper.Md5Checker.Md5Hashes;
             Console.WriteLine("");
 
             // D1D LoopSetsOf5Words
-            numberOfJackpots = _injectedSetsOf5WordsLooper.LoopSetsOf5WordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
+            numberOfJackpots = _injectedSetsOf5WordsLooper.LoopSetsOfWordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
             remainingHashes = _injectedSetsOf5WordsLooper.Md5Checker.Md5Hashes;
             Console.WriteLine("");
         }
