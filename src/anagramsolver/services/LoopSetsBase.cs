@@ -63,8 +63,88 @@ namespace anagramsolver.services
         /// <param name="combinationCounter">a counter of all combinations in all sets</param>
         /// <param name="subsetCounter">a counter of all valid subsets (of the anagram) in all sets</param>
         /// <returns>numberOfJackpots</returns>
-        protected abstract int LoopWordCombinationsInCurrentSet(int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter);
+        //protected abstract int LoopWordCombinationsInCurrentSet(int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter);
+        protected virtual int LoopWordCombinationsInCurrentSet(int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter)
+        {
+            var noOfWordsInSet = currentSetLength.DictOfWordLengths.Count;
+            // Create list with permutations for string.Format: "{0} {1}" from [0,1] to [1,0] = 2 permutations
+            string[] listOfWordPermutationsReplacementString = PermutationsCreator.CreateListOfWordPermutationsReplacementStrings(noOfWordsInSet);
 
+            // for each word in the set put each listOfPointersToWords in a list
+            var listOflistOfPointersToWords = new int[noOfWordsInSet][];
+            for (int i = 0; i < noOfWordsInSet; i++)
+            {
+                int wordNumberInSet = i + 1;
+                listOflistOfPointersToWords[i] = _wordlistCtrl.TableByWordLength[currentSetLength.DictOfWordLengths[(short)wordNumberInSet] - 1].ToArray();
+            }
+
+            ulong currentSetCombinations = (ulong)(listOflistOfPointersToWords[0].Length * listOflistOfPointersToWords[1].Length);
+            _consoleWriteLine(" Combinations: " + string.Format("{0:n0}", combinationCounter) + ". Subsets: " + string.Format("{0:n0}", subsetCounter) + ". NextSet: " + currentSetLength.ToString() + " having " + string.Format("{0:n0}", currentSetCombinations) + " combinations");
+
+            // List to avoid checking same sentence twice
+            HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength = new HashSet<int[]>(new ArrayComparer());
+            ulong uniqueListOfSentencesHavingWordsWithSameLengthCounter = 0;
+            ulong skippedChecksCounter = 0;
+
+            // Since we know that there won't be any long words before len = 11, then we make the outer loop pass those 0 values first
+            foreach (var word2Pointer in listOflistOfPointersToWords[1])
+            {
+                foreach (var word1Pointer in listOflistOfPointersToWords[0])
+                {
+                    DoWork(ref numberOfJackpots, currentSetLength, ref subsetCounter, listOfWordPermutationsReplacementString, uniqueListOfSentencesHavingWordsWithSameLength, ref uniqueListOfSentencesHavingWordsWithSameLengthCounter, ref skippedChecksCounter, word2Pointer, word1Pointer);
+                    combinationCounter++;
+                }
+            }
+            if (uniqueListOfSentencesHavingWordsWithSameLengthCounter > 0)
+            {
+                _consoleWriteLine("  UniqueListOfSentencesHavingWordsWithSameLength: " + uniqueListOfSentencesHavingWordsWithSameLengthCounter + ". SkippedChecks: " + skippedChecksCounter);
+            }
+            return numberOfJackpots;
+        }
+
+        private void DoWork(ref int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong subsetCounter, string[] listOfWordPermutationsReplacementString, HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength, ref ulong uniqueListOfSentencesHavingWordsWithSameLengthCounter, ref ulong skippedChecksCounter, int word2Pointer, int word1Pointer)
+        {
+            // ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter);
+
+            var word1Row = _wordlistCtrl.TableFilter2_WordMatrix[word1Pointer];
+            var word2Row = _wordlistCtrl.TableFilter2_WordMatrix[word2Pointer];
+            var rows = new int[][] { word1Row, word2Row };
+            var combinedWordToValidate = CombineRows(rows);
+            var isSubset = _anagramCtrl.IsSubset(combinedWordToValidate);
+
+            // Do MD5 check if the two words combined is still a subset of anagram
+            bool gotJackpot = false;
+            if (isSubset)
+            {
+                subsetCounter++;
+                // Put words in a list, so they can be passed on as a collection
+                int[] currentSentence = new int[] { word1Pointer, word2Pointer };
+
+                // Now that we are down to the few sentences that are also subsets, then we'll keep them in an ordered unique list,
+                // So those sentences having same words are not checked more than once
+                if (currentSetLength.AnyOfSameLength)
+                {
+                    Array.Sort(currentSentence);
+                    // If we don't have that sentence, then do md5Check
+                    if (!uniqueListOfSentencesHavingWordsWithSameLength.Contains(currentSentence))
+                    {
+                        uniqueListOfSentencesHavingWordsWithSameLengthCounter++;
+                        uniqueListOfSentencesHavingWordsWithSameLength.Add(currentSentence);
+
+                        gotJackpot = FetchWordsAndCheckMd5RemoveFoundHash(ref numberOfJackpots, currentSentence, listOfWordPermutationsReplacementString);
+                    }
+                    else
+                    {
+                        skippedChecksCounter++;
+                    }
+                }
+                // No words of same lenght, so just do check
+                else
+                {
+                    gotJackpot = FetchWordsAndCheckMd5RemoveFoundHash(ref numberOfJackpots, currentSentence, listOfWordPermutationsReplacementString);
+                }
+            }
+        }
     }
 
     public class LoopSetsBase

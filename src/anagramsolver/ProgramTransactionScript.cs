@@ -160,12 +160,12 @@ namespace anagramsolver
             Console.WriteLine("");
 
             // D1C LoopSetsOf4Words
-            numberOfJackpots = _injectedSetsOf4WordsLooper.LoopSetsOfWordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
+            //numberOfJackpots = _injectedSetsOf4WordsLooper.LoopSetsOfWordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
             remainingHashes = _injectedSetsOf4WordsLooper.Md5Checker.Md5Hashes;
             Console.WriteLine("");
 
             // D1D LoopSetsOf5Words
-            numberOfJackpots = _injectedSetsOf5WordsLooper.LoopSetsOfWordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
+            //numberOfJackpots = _injectedSetsOf5WordsLooper.LoopSetsOfWordsDoValidateAndCheckMd5(numberOfJackpots, remainingHashes);
             remainingHashes = _injectedSetsOf5WordsLooper.Md5Checker.Md5Hashes;
             Console.WriteLine("");
         }
