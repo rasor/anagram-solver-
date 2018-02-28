@@ -13,10 +13,10 @@ namespace anagramsolver
         private static IAnagramContainer _injectedAnagramContainer;
         private static IWordlistContainer _injectedWordlistContainer;
         private static ConsoleLogger _injectedLogger;
-        private static LoopSetsOf2WordsHelper<CurrentSetOf2Pos> _injectedSetsOf2WordsLooper;
-        private static LoopSetsOf3WordsHelper<CurrentSetOf3Pos> _injectedSetsOf3WordsLooper;
-        private static LoopSetsOf4WordsHelper<CurrentSetOf4Pos> _injectedSetsOf4WordsLooper;
-        private static LoopSetsOf5WordsHelper<CurrentSetOf5Pos> _injectedSetsOf5WordsLooper;
+        private static LoopSetsHelper<CurrentSetOf2Pos> _injectedSetsOf2WordsLooper;
+        private static LoopSetsHelper<CurrentSetOf3Pos> _injectedSetsOf3WordsLooper;
+        private static LoopSetsHelper<CurrentSetOf4Pos> _injectedSetsOf4WordsLooper;
+        private static LoopSetsHelper<CurrentSetOf5Pos> _injectedSetsOf5WordsLooper;
 
         // Pseudo:
         // A. Load Data
@@ -25,8 +25,8 @@ namespace anagramsolver
 
         public ProgramTransactionScript(IConfigurationRoot config, ConsoleLogger logger,
             IAnagramContainer anagramContainer, IWordlistContainer wordlistContainer,
-            LoopSetsOf2WordsHelper<CurrentSetOf2Pos> setsOf2WordsLooper, LoopSetsOf3WordsHelper<CurrentSetOf3Pos> setsOf3WordsLooper,
-            LoopSetsOf4WordsHelper<CurrentSetOf4Pos> setsOf4WordsLooper, LoopSetsOf5WordsHelper<CurrentSetOf5Pos> setsOf5WordsLooper)
+            LoopSetsHelper<CurrentSetOf2Pos> setsOf2WordsLooper, LoopSetsHelper<CurrentSetOf3Pos> setsOf3WordsLooper,
+            LoopSetsHelper<CurrentSetOf4Pos> setsOf4WordsLooper, LoopSetsHelper<CurrentSetOf5Pos> setsOf5WordsLooper)
         {
             _injectedLogger = logger;
             Console.WriteLine("Hello from AnagramSolver!");

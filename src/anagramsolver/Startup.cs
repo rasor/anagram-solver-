@@ -37,10 +37,10 @@ namespace anagramsolver
             services.AddSingleton<IAnagramContainer, AnagramContainer>();
             services.AddSingleton<IWordlistContainer, WordlistContainer>();
             services.AddSingleton(MD5.Create());
-            services.AddSingleton<LoopSetsOf2WordsHelper<CurrentSetOf2Pos>, LoopSetsOf2WordsHelper<CurrentSetOf2Pos>>();
-            services.AddSingleton<LoopSetsOf3WordsHelper<CurrentSetOf3Pos>, LoopSetsOf3WordsHelper<CurrentSetOf3Pos>>();
-            services.AddSingleton<LoopSetsOf4WordsHelper<CurrentSetOf4Pos>, LoopSetsOf4WordsHelper<CurrentSetOf4Pos>>();
-            services.AddSingleton<LoopSetsOf5WordsHelper<CurrentSetOf5Pos>, LoopSetsOf5WordsHelper<CurrentSetOf5Pos>>();
+            services.AddSingleton<LoopSetsHelper<CurrentSetOf2Pos>, LoopSetsHelper<CurrentSetOf2Pos>>();
+            services.AddSingleton<LoopSetsHelper<CurrentSetOf3Pos>, LoopSetsHelper<CurrentSetOf3Pos>>();
+            services.AddSingleton<LoopSetsHelper<CurrentSetOf4Pos>, LoopSetsHelper<CurrentSetOf4Pos>>();
+            services.AddSingleton<LoopSetsHelper<CurrentSetOf5Pos>, LoopSetsHelper<CurrentSetOf5Pos>>();
 
             // Main() is moved to ProgramTransactionScript, so the Program.cs is only used for setting up DI
             services.AddSingleton<ProgramTransactionScript, ProgramTransactionScript>();

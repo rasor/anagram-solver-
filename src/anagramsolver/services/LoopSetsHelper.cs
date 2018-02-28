@@ -7,13 +7,12 @@ using System.Security.Cryptography;
 
 namespace anagramsolver.services
 {
-    public abstract class LoopSetsBase<TCurrentSetOfXPos>: LoopSetsBase where TCurrentSetOfXPos : CurrentSetOf2Pos
+    public class LoopSetsHelper<TCurrentSetOfXPos> : LoopSetsHelper where TCurrentSetOfXPos : CurrentSetOf2Pos, new()
     {
-        public LoopSetsBase(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
+        public LoopSetsHelper(ConsoleLogger logger, MD5 Md5HashComputer,
             IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl) :
-            base(ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
-        {
-        }
+            base(logger.ConsoleWriteLine, Md5HashComputer, AnagramCtrl, WordlistCtrl)
+        { }
 
         /// <summary>
         /// Pseudo:
@@ -153,7 +152,7 @@ namespace anagramsolver.services
         }
     }
 
-    public class LoopSetsBase
+    public class LoopSetsHelper
     {
         protected Action<string> _consoleWriteLine;
         protected MD5 _md5HashComputer;
@@ -163,7 +162,7 @@ namespace anagramsolver.services
         protected IAnagramContainer _anagramCtrl;
         protected IWordlistContainer _wordlistCtrl;
 
-        public LoopSetsBase(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
+        public LoopSetsHelper(Action<string> ConsoleWriteLine, MD5 Md5HashComputer,
             IAnagramContainer AnagramCtrl, IWordlistContainer WordlistCtrl)
         {
             _consoleWriteLine = ConsoleWriteLine;
