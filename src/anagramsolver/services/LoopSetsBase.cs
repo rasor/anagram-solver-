@@ -86,15 +86,12 @@ namespace anagramsolver.services
             ulong uniqueListOfSentencesHavingWordsWithSameLengthCounter = 0;
             ulong skippedChecksCounter = 0;
 
+            //var combinationCounter = 0;
+            var currentSentenceIndex = -1;
+            var currentSentence = new int[noOfWordsInSet];
             // Since we know that there won't be any long words before len = 11, then we make the outer loop pass those 0 values first
-            foreach (var word2Pointer in listOflistOfPointersToWords[1])
-            {
-                foreach (var word1Pointer in listOflistOfPointersToWords[0])
-                {
-                    DoWork(ref numberOfJackpots, currentSetLength, ref subsetCounter, listOfWordPermutationsReplacementString, uniqueListOfSentencesHavingWordsWithSameLength, ref uniqueListOfSentencesHavingWordsWithSameLengthCounter, ref skippedChecksCounter, word2Pointer, word1Pointer);
-                    combinationCounter++;
-                }
-            }
+            recurseCombinations(currentSentence, currentSentenceIndex, ref numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter, listOfWordPermutationsReplacementString, listOflistOfPointersToWords, uniqueListOfSentencesHavingWordsWithSameLength, ref uniqueListOfSentencesHavingWordsWithSameLengthCounter, ref skippedChecksCounter);
+
             if (uniqueListOfSentencesHavingWordsWithSameLengthCounter > 0)
             {
                 _consoleWriteLine("  UniqueListOfSentencesHavingWordsWithSameLength: " + uniqueListOfSentencesHavingWordsWithSameLengthCounter + ". SkippedChecks: " + skippedChecksCounter);
@@ -102,12 +99,48 @@ namespace anagramsolver.services
             return numberOfJackpots;
         }
 
-        private void DoWork(ref int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong subsetCounter, string[] listOfWordPermutationsReplacementString, HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength, ref ulong uniqueListOfSentencesHavingWordsWithSameLengthCounter, ref ulong skippedChecksCounter, int word2Pointer, int word1Pointer)
+        private void recurseCombinations(int[] currentSentence, int currentSentenceIndex, ref int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong combinationCounter, ref ulong subsetCounter, string[] listOfWordPermutationsReplacementString, int[][] listOflistOfPointersToWords, HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength, ref ulong uniqueListOfSentencesHavingWordsWithSameLengthCounter, ref ulong skippedChecksCounter)
+        {
+            currentSentenceIndex++;
+            foreach (var wordPointer in listOflistOfPointersToWords[currentSentenceIndex])
+            {
+                currentSentence[currentSentenceIndex] = wordPointer;
+                if (currentSentenceIndex < currentSentence.Length - 1)
+                {
+                    recurseCombinations(currentSentence, currentSentenceIndex, ref numberOfJackpots, currentSetLength, ref combinationCounter, ref subsetCounter, listOfWordPermutationsReplacementString, listOflistOfPointersToWords, uniqueListOfSentencesHavingWordsWithSameLength, ref uniqueListOfSentencesHavingWordsWithSameLengthCounter, ref skippedChecksCounter);
+                }
+                else
+                {
+                    PleaseEnterTheDeepHoleInsideLoop(currentSentence, ref numberOfJackpots, currentSetLength, ref subsetCounter, listOfWordPermutationsReplacementString, uniqueListOfSentencesHavingWordsWithSameLength, ref uniqueListOfSentencesHavingWordsWithSameLengthCounter, ref skippedChecksCounter);
+                    combinationCounter++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Beware - cpu time is very expensive down here, since 
+        /// imagine if we have 5 words each having 100 words to loop through = 100*100*100*100*100 
+        /// = 10.000.000.000 times to enter this code
+        /// And that is just for one currentSetLength of which we can have a lot.
+        /// 
+        /// Then comes all the permutations below. For 5 words that is 5! = 120 times we have to swap the words to test if the sentence match these 3 MD5.
+        /// 
+        /// So to limit work down here we start out with doing a check to see if all the words in the sentence is a subset of the anagram.
+        /// </summary>
+        /// <param name="currentSentence"></param>
+        /// <param name="numberOfJackpots"></param>
+        /// <param name="currentSetLength"></param>
+        /// <param name="subsetCounter"></param>
+        /// <param name="listOfWordPermutationsReplacementString"></param>
+        /// <param name="uniqueListOfSentencesHavingWordsWithSameLength"></param>
+        /// <param name="uniqueListOfSentencesHavingWordsWithSameLengthCounter"></param>
+        /// <param name="skippedChecksCounter"></param>
+        private void PleaseEnterTheDeepHoleInsideLoop(int[] currentSentence, ref int numberOfJackpots, TCurrentSetOfXPos currentSetLength, ref ulong subsetCounter, string[] listOfWordPermutationsReplacementString, HashSet<int[]> uniqueListOfSentencesHavingWordsWithSameLength, ref ulong uniqueListOfSentencesHavingWordsWithSameLengthCounter, ref ulong skippedChecksCounter)
         {
             // ConsoleWriteLine(" Combinations: " + combinationCounter + ". Subsets: " + subsetCounter);
 
-            var word1Row = _wordlistCtrl.TableFilter2_WordMatrix[word1Pointer];
-            var word2Row = _wordlistCtrl.TableFilter2_WordMatrix[word2Pointer];
+            var word1Row = _wordlistCtrl.TableFilter2_WordMatrix[currentSentence[0]];
+            var word2Row = _wordlistCtrl.TableFilter2_WordMatrix[currentSentence[1]];
             var rows = new int[][] { word1Row, word2Row };
             var combinedWordToValidate = CombineRows(rows);
             var isSubset = _anagramCtrl.IsSubset(combinedWordToValidate);
@@ -117,9 +150,6 @@ namespace anagramsolver.services
             if (isSubset)
             {
                 subsetCounter++;
-                // Put words in a list, so they can be passed on as a collection
-                int[] currentSentence = new int[] { word1Pointer, word2Pointer };
-
                 // Now that we are down to the few sentences that are also subsets, then we'll keep them in an ordered unique list,
                 // So those sentences having same words are not checked more than once
                 if (currentSetLength.AnyOfSameLength)
