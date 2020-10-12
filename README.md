@@ -15,7 +15,12 @@
 
 # Build and Run
 
-To build and run the sample, change to the `src/anagramsolver` directory and
+Install 
+* VS Code
+* [C# for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+* [.NET Core 2.1 SDK (v2.1.810) - Windows x64 Installer](https://dotnet.microsoft.com/download/dotnet-core/thank-you/sdk-2.1.810-windows-x64-installer)
+
+To build and run the sample, change to the `./anagramsolver/src/anagramsolver` directory and
 type the following two commands:
 
 `dotnet restore`
